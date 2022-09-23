@@ -24,3 +24,5 @@
 - Slider
 - ToggleButtons
 - FloatingActionButton
+
+![Flutter Basic Widgets](./img/flutter_basic_widgets.gif)
