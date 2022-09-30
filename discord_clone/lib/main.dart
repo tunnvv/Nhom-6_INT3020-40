@@ -1,14 +1,16 @@
+import 'package:discord_clone/screens/chat_screen.dart';
+import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:discord_clone/constants.dart';
 import 'package:discord_clone/screens/welcome/welcome_screen.dart';
 import 'package:discord_clone/screens/singin/singin_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const DiscordClone());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DiscordClone extends StatelessWidget {
+  const DiscordClone({super.key});
 
   // This widget is the root of your application.
   @override
@@ -23,4 +25,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
