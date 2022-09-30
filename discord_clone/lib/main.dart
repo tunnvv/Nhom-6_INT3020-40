@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:discord_clone/constants.dart';
 import 'package:discord_clone/screens/welcome/welcome_screen.dart';
+import 'package:discord_clone/screens/singin/singin_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: kPrimaryColor,
       ),
-      home: WelcomeScreen(),
+      home: SinginScreen(),
     );
   }
 }
