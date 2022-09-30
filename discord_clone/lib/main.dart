@@ -1,6 +1,9 @@
 import 'package:discord_clone/screens/chat_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:discord_clone/constants.dart';
+import 'package:discord_clone/screens/welcome/welcome_screen.dart';
+import 'package:discord_clone/screens/singin/singin_screen.dart';
 
 void main() {
   runApp(const DiscordClone());
@@ -13,10 +16,12 @@ class DiscordClone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.light()
-            .copyWith(scaffoldBackgroundColor: backgroundColor),
-        title: 'Discord Clone',
-        home: const ChatScreen());
+      debugShowCheckedModeBanner: false,
+      title: 'Welcome Discord',
+      theme: ThemeData(
+        primaryColor: kPrimaryColor,
+      ),
+      home: SinginScreen(),
+    );
   }
 }
