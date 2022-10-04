@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:discord_clone/constants.dart';
+import 'package:discord_clone/screens/signin/signin_screen.dart';
+import 'package:discord_clone/utils/constants/colors.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -7,6 +8,7 @@ class WelcomeScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: kPrimaryLightColor,
       body: Container(
@@ -55,7 +57,7 @@ class WelcomeScreen extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w500
                   ),
-                )
+                ),
             ),
             Positioned(
                 top: 640.0,
@@ -75,7 +77,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kBntSingupColor),
+                      backgroundColor: MaterialStateProperty.all(kSignupBntColor),
                     ),
                   ),
                 ),
@@ -88,7 +90,13 @@ class WelcomeScreen extends StatelessWidget {
                 height: 42.0,
                 width: 130,
                 child: TextButton(
-                  onPressed: () {  },
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SigninScreen()),
+                    );
+
+                  },
                   child: Text(
                     "Đăng nhập",
                     style: TextStyle(
@@ -98,7 +106,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kBntSinginColor),
+                    backgroundColor: MaterialStateProperty.all(kSigninBntColor),
                   ),
                 ),
               ),

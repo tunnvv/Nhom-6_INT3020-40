@@ -1,8 +1,30 @@
-import 'package:discord_clone/constants.dart';
 import 'package:flutter/material.dart';
 
-class SinginScreen extends StatelessWidget {
-  const SinginScreen({Key? key}) : super(key: key);
+import '../../utils/constants/colors.dart';
+import '../chat/chat_screen.dart';
+
+bool checkEmailandPhoneNumber(String userInfo) {
+  return true;
+}
+
+class SigninScreen extends StatefulWidget {
+  const SigninScreen({super.key});
+
+  @override
+  State<SigninScreen> createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreen> {
+  // const _SigninScreenState({Key? key}) : super(key: key);
+  TextEditingController userIDController = TextEditingController();
+  TextEditingController passwdController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    userIDController.dispose();
+    passwdController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +86,7 @@ class SinginScreen extends StatelessWidget {
                     child: Theme(
                       data: Theme.of(context).copyWith(splashColor: Colors.transparent),
                       child: TextField(
+                        controller: userIDController,
                         autofocus: false,
                         style: TextStyle(fontSize: 18, color: kPrimaryLightColor),
                         decoration: InputDecoration(
@@ -86,6 +109,8 @@ class SinginScreen extends StatelessWidget {
                 child: Theme(
                   data: Theme.of(context).copyWith(splashColor: Colors.transparent),
                   child: TextField(
+                    controller: passwdController,
+                    obscureText: true,
                     autofocus: false,
                     style: TextStyle(fontSize: 18, color: kPrimaryLightColor),
                     decoration: InputDecoration(
@@ -127,7 +152,17 @@ class SinginScreen extends StatelessWidget {
                 height: 45.0,
                 width: 130,
                 child: TextButton(
-                  onPressed: () {  },
+                  onPressed: () {
+                    final String userId = userIDController.text;
+                    final String pw = passwdController.text;
+
+                    if (userId == "admin" && pw == "1234") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatScreen()),
+                      );
+                    }
+                  },
                   child: Text(
                     "Đăng nhập",
                     style: TextStyle(
@@ -137,7 +172,7 @@ class SinginScreen extends StatelessWidget {
                     ),
                   ),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(kBntSingupColor),
+                    backgroundColor: MaterialStateProperty.all(kSignupBntColor),
                   ),
                 ),
               ),

@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/utils/constants/colors.dart';
 import 'package:discord_clone/widgets/chat_item.dart';
-import 'package:discord_clone/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 
 class Chat {
@@ -13,8 +12,8 @@ class Chat {
 
   Chat(this.name, this.avatar, this.message, this.createdAt);
 
-  Chat.fromJson(Map<String, dynamic> json)
-      : avatar = json['avatar'],
+  Chat.fromJson(Map<String, dynamic> json):
+        avatar = json['avatar'],
         name = json['name'],
         message = json['message'],
         createdAt = json['createdAt'];
