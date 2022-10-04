@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:discord_clone/widgets/chat_item.dart';
 import 'package:discord_clone/widgets/text_field.dart';
+import 'package:discord_clone/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class Chat {
@@ -47,6 +48,21 @@ class _ChatScreenState extends State<ChatScreen> {
     Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      drawer: Drawer(
+          child: SingleChildScrollView(
+        child: Container(
+            child: Row(
+          children: [
+            Expanded(
+              child: My_sever(),
+            ),
+            Expanded(
+              flex: 3,
+              child: Chanel_of_sever(context),
+            )
+          ],
+        )),
+      )),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         child: Column(
@@ -60,11 +76,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.menu,
                         color: primaryTextColor,
-                        size: 30.0,
+                        size: 30,
                       ),
                       Text(
                         "#kênh-công-chúa",
@@ -113,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                         borderSide: BorderSide(color: Colors.grey, width: 1)),
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.send, color: primaryTextColor),
+                      icon: const Icon(Icons.send, color: Colors.white),
                       onPressed: () {
                         if (chatController.text != "") {
                           Map<String, dynamic> chatItemJson = {
@@ -139,4 +155,68 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+
+Widget My_sever() {
+  return Container(
+    padding: EdgeInsets.only(top: 15),
+    child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      IconButton(
+        icon: Image.asset("assets/images/discord.png"),
+        iconSize: 40,
+        onPressed: () {},
+      ),
+      IconButton(
+        icon: Image.asset("assets/images/discord.png"),
+        iconSize: 40,
+        onPressed: () {},
+      )
+    ]),
+  );
+}
+
+Widget Chanel_of_sever(BuildContext context) {
+  return Container(
+      padding: EdgeInsets.only(top: 15),
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Text("HadesGuild", style: TextStyle(color: Colors.grey, fontSize: 16)),
+        ExpansionTile(
+          title: Text("KÊNH CHAT"),
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreen()));
+                        },
+                        child: Text("#kênh-công-chúa"))
+                  ]),
+            )
+          ],
+        ),
+        ExpansionTile(
+          title: Text("KÊNH ĐÀM THOẠI"),
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextButton.icon(
+                        onPressed: () {},
+                        icon: Icon(Icons.volume_up),
+                        label: Text("Chung"))
+                  ]),
+            )
+          ],
+        ),
+      ]));
 }
