@@ -1,4 +1,4 @@
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/utils/constants/colors.dart';
 import "package:flutter/material.dart";
 
 class ChatItemWidget extends StatefulWidget {
