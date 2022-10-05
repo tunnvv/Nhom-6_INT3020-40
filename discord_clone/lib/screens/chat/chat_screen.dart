@@ -54,8 +54,8 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         appBar: AppBar(
             backgroundColor: chatHeaderColor,
-            shape:
-                const Border(bottom: BorderSide(color: blackColor, width: 1)),
+            shape: const Border(
+                bottom: BorderSide(color: chatBorderColor, width: 1)),
             elevation: 0,
             centerTitle: true,
             leading: IconButton(
@@ -96,8 +96,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
               decoration: const BoxDecoration(
                   color: chatBodyColor,
-                  border:
-                      Border(top: BorderSide(width: 1.0, color: blackColor))),
+                  border: Border(
+                      top: BorderSide(width: 1, color: chatBorderColor))),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
