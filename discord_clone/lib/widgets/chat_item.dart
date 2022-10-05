@@ -27,7 +27,7 @@ class _ChatItemWidgetState extends State<ChatItemWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(children: [
         CircleAvatar(
-          radius: 28, // Image radius
+          radius: 28,
           backgroundImage: NetworkImage(widget.avatar),
         ),
         const SizedBox(width: 12),
