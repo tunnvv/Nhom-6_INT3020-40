@@ -1,4 +1,4 @@
-import 'package:discord_clone/utils/constants/colors.dart';
+import 'package:discord_clone/utils/colors.dart';
 import "package:flutter/material.dart";
 
 class ChatItemWidget extends StatefulWidget {
@@ -35,20 +35,23 @@ class _ChatItemWidgetState extends State<ChatItemWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
+            Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
               Text(
                 widget.name,
                 style: const TextStyle(
-                    color: primaryTextColor,
+                    color: whiteColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w700),
               ),
               const SizedBox(width: 12),
-              Text(
-                widget.createdAt,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 0.5),
+                child: Text(
+                  widget.createdAt,
+                  style: const TextStyle(
+                    color: whiteColor,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ]),
@@ -56,9 +59,7 @@ class _ChatItemWidgetState extends State<ChatItemWidget> {
             Text(
               widget.message,
               style: const TextStyle(
-                  color: primaryTextColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+                  color: whiteColor, fontSize: 16, fontWeight: FontWeight.w500),
             )
           ],
         ),
