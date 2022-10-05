@@ -50,8 +50,6 @@ dev_dependencies:
 
   flutter_inner_drawer: "^1.0.0+1"
 
-  flutter_launcher_icons: "^0.9.2"
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -75,12 +73,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: MyflutterApp
-      font: 
-        - asset: assets/icons/MyflutterApp.tff
-
   # fonts:
+  fonts:
+    - family: MyFlutterApp 
+      fonts:
+        - asset: assets/icons/MyFlutterApp.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

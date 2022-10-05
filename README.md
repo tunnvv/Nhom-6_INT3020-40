@@ -26,3 +26,12 @@
 - FloatingActionButton
 
 ![Flutter Basic Widgets](./img/flutter_basic_widgets.gif)
+
+# Tuần 04 - Triển khai Bài tập lớn Discord Clone
+## Các màn hình đã làm
+
+- Welcome screen
+- Singin screen
+- Chat screen
+
+<img src="./img/week04%20-%20Nguyen%20Van%20Tu%20-%2019021391%20-%20Phone%20-%20welcome_screen.png" width="200" height="400"/> <img src="./img/week04%20-%20Nguyen%20Van%20Tu%20-%2019021391%20-%20Phone%20-%20singin_screen.png" width="200" height="400"/> <img src="./img/week04_chat_screen.png" width="200" height="400"/>

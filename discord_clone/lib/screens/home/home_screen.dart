@@ -1,8 +1,8 @@
-import 'package:discord_clone/screens/chat_screen.dart';
+import 'package:discord_clone/screens/chat/chat_screen.dart';
 import 'package:discord_clone/screens/icons/my_flutter_app_icons.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/utils/constants/colors.dart';
 import 'package:discord_clone/screens/icons/my_flutter_app_icons.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,12 +13,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  List<Channel> kenh_chat = [
-    Channel(Icon(MyFlutterApp.hashtag), "kênh-công-chúa"),
+  List<PanelList> _panels = [
+    PanelList(1, "KÊNH CHAT", false),
+    PanelList(2, "KÊNH ĐÀM THOẠI", false),
   ];
-
-  List<Channel> kenh_dam_thoai = [Channel(Icon(Icons.volume_up), "Chung")];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +31,36 @@ class _HomeScreen extends State<HomeScreen> {
             ),
             Expanded(
               flex: 3,
-              child: Channel_of_sever(context),
+              child: ExpansionPanelList(
+                expansionCallback: (_panelsIndex, isExpanded) {
+                  setState(() {
+                    _panels[_panelsIndex].isExpanded = !isExpanded;
+                  });
+                },
+                children: _panels.map((_panel) {
+                  return ExpansionPanel(
+                      isExpanded: _panel.isExpanded,
+                      headerBuilder: (bc, status) {
+                        return Container(
+                            child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(_panel.name)));
+                      },
+                      body: Container(
+                        padding: EdgeInsets.all(10),
+                        child: ListTile(
+                          leading: Icon(MyFlutterApp.hashtag, size: 15),
+                          title: Text("chung"),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatScreen()));
+                          },
+                        ),
+                      ));
+                }).toList(),
+              ),
             )
           ],
         )),
@@ -60,57 +87,71 @@ Widget My_sever() {
   );
 }
 
-Widget Channel_of_sever(BuildContext context) {
-  return Container(
-      padding: EdgeInsets.only(top: 15),
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Text("HadesGuild", style: TextStyle(color: Colors.grey, fontSize: 16)),
-        // ExpansionTile(
-        //   title: Text("KÊNH CHAT"),
-        //   children: <Widget>[
-        //     Padding(
-        //       padding: EdgeInsets.only(left: 15),
-        //       child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.start,
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: <Widget>[
-        //             TextButton(
-        //                 onPressed: () {
-        //                   Navigator.push(
-        //                       context,
-        //                       MaterialPageRoute(
-        //                           builder: (context) => ChatScreen()));
-        //                 },
-        //                 child: Text("#kênh-công-chúa"))
-        //           ]),
-        //     )
-        //   ],
-        // ),
-        // ExpansionTile(
-        //   title: Text("KÊNH ĐÀM THOẠI"),
-        //   children: <Widget>[
-        //     Padding(
-        //       padding: EdgeInsets.only(left: 15),
-        //       child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.start,
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: <Widget>[
-        //             TextButton.icon(
-        //                 onPressed: () {},
-        //                 icon: Icon(Icons.volume_up),
-        //                 label: Text("Chung"))
-        //           ]),
-        //     )
-        //   ],
-        // ),
+// Widget Channel_of_sever(BuildContext context) {
+//   List<PanelList> _panels = [
+//     PanelList(1, "KÊNH CHAT"),
+//     PanelList(2, "KÊNH ĐÀM THOẠI")
+//   ];
+//   return Container(
+//       // padding: EdgeInsets.only(top: 15),
+//       // child: Column(
+//       //   mainAxisAlignment: MainAxisAlignment.start,
+//       //   children: [
+//       //     Text("HadesGuild",
+//       //         style: TextStyle(color: Colors.grey, fontSize: 16)),
+//       //     // ExpansionTile(
+//       //     //   title: Text("KÊNH CHAT"),
+//       //     //   children: <Widget>[
+//       //     //     ListTile(
+//       //     //       leading: Icon(MyFlutterApp.hashtag, size: 15),
+//       //     //       title: Text("chung"),
+//       //     //       onTap: () {
+//       //     //         Navigator.push(context,
+//       //     //             MaterialPageRoute(builder: (context) => ChatScreen()));
+//       //     //       },
+//       //     //     ),
+//       //     //     ListTile(
+//       //     //       leading: Icon(MyFlutterApp.hashtag, size: 15),
+//       //     //       title: Text("kênh-công-chúa"),
+//       //     //       onTap: () {
+//       //     //         Navigator.push(context,
+//       //     //             MaterialPageRoute(builder: (context) => ChatScreen()));
+//       //     //       },
+//       //     //     )
+//       //     //   ],
+//       //     // ),
+//       //     // ExpansionTile(title: Text("KÊNH ĐÀM THOẠI"), children: <Widget>[
+//       //     //   ListTile(
+//       //     //     leading: Icon(Icons.volume_up, size: 15),
+//       //     //     title: Text("Chung"),
+//       //     //     onTap: () {},
+//       //     //   )
+//       //     // ])
 
-        ExpansionPanelList()
-      ]));
-}
+//       //     ExpansionPanelList(
+//       //       children: [
+//       //         ExpansionPanel(
+//       //             headerBuilder: ((context, isExpanded) {
+//       //               return ListTile(title: Text("KÊNH CHAT"));
+//       //             }),
+//       //             body: ListTile(title: Text("Chung")))
+//       //       ],
+//       //       expansionCallback: ((panelIndex, isExpanded) {
+//       //         setState(() {});
+//       //       }),
+//       //     )
+//       //   ],
+//       // )
+//       child: ExpansionPanelList(
+//         children:
+//       )
+//   );
+// }
 
-class Channel {
-  Icon icon;
+class PanelList {
+  int index;
   String name;
+  bool isExpanded;
 
-  Channel(this.icon, this.name);
+  PanelList(this.index, this.name, this.isExpanded);
 }
