@@ -1,9 +1,6 @@
-import 'package:discord_clone/screens/chat_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:discord_clone/constants.dart';
 import 'package:discord_clone/screens/welcome/welcome_screen.dart';
-import 'package:discord_clone/screens/singin/singin_screen.dart';
 
 void main() {
   runApp(const DiscordClone());
@@ -21,7 +18,7 @@ class DiscordClone extends StatelessWidget {
       theme: ThemeData(
         primaryColor: kPrimaryColor,
       ),
-      home: SinginScreen(),
+      home: WelcomeScreen(),
     );
   }
 }

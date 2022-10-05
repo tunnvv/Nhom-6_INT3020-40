@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:discord_clone/utils/colors.dart';
 import "package:flutter/material.dart";
 
