@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'package:discord_clone/utils/colors.dart';
 import "package:flutter/material.dart";
 
 class TextFieldWidget extends StatefulWidget {
@@ -32,14 +30,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(100)),
               borderSide: BorderSide(color: Colors.grey, width: 1)),
-          // suffixIcon: IconButton(
-          //   icon: Icon(Icons.send),
-          //   onPressed: () {
-          //     setState(() {
-          //       _isBluetoothOn = !_isBluetoothOn;
-          //     });
-          //   },
-          // ),
         ))
       ],
     );

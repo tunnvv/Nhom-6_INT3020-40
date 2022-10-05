@@ -1,6 +1,6 @@
+import 'package:discord_clone/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
-import '../chat/chat_screen.dart';
 
 bool checkEmailandPhoneNumber(String userInfo) {
   return true;
@@ -14,7 +14,6 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  // const _SigninScreenState({Key? key}) : super(key: key);
   TextEditingController userIDController = TextEditingController();
   TextEditingController passwdController = TextEditingController();
 
@@ -29,7 +28,6 @@ class _SigninScreenState extends State<SigninScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      // backgroundColor: Color.fromRGBO(85, 130, 131, 89),
       body: Container(
         child: Stack(
           alignment: Alignment.center,
@@ -162,7 +160,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     if (userId == "admin" && pw == "1234") {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatScreen()),
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
                       );
                     }
                   },
