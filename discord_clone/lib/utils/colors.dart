@@ -17,5 +17,10 @@ const chatBackgroundWidgetColor = Color(0XFF1D1E21);
 const chatTextSecondaryColor = Color(0xFF808185);
 
 // Nguyen Manh Tuan
-
-
+const friendStatusOnlineColor = Color.fromARGB(244, 0, 255, 0);
+const friendStatusOfflineColor = Color(0xFF808185);
+const friendTextColor = Color(0xFF808185);
+const friendButtonBackgroundColor = Color(0XFF1D1E21);
+const friendIconColor = Color(0xFF808185);
+const friendBackgroundColor = Color(0XFF303136);
+const friendHeaderColor = Color(0XFF28292E);
