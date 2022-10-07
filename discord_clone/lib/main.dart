@@ -17,7 +17,7 @@ class DiscordClone extends StatelessWidget {
       theme: ThemeData(
         primaryColor: kPrimaryColor,
       ),
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
