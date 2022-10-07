@@ -1,6 +1,7 @@
 import 'package:discord_clone/screens/account/account_screen.dart';
 import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/screens/chat/chat_screen.dart';
+import 'package:discord_clone/screens/friend/friend_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:discord_clone/utils/overlapping_panels.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _HomeScreen extends State<HomeScreen> {
               },
             )
           : selectedTabIndex == 1
-              ? const Text('Friend Screen')
+              ? const FriendScreen()
               : selectedTabIndex == 2
                   ? const Text('Search Screen')
                   : selectedTabIndex == 3

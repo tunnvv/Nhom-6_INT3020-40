@@ -71,7 +71,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                           children: const [
                             Expanded(
                               child: Text(
-                                "J2 Team",
+                                "J2Team",
                                 style: TextStyle(
                                     color: whiteColor,
                                     fontSize: 18,

@@ -1,3 +1,5 @@
+import 'package:discord_clone/screens/call/prepare_call.dart';
+import 'package:discord_clone/screens/chat/chat_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import "package:flutter/material.dart";
 
@@ -23,7 +25,18 @@ class ChannelItemWidget extends StatelessWidget {
           splashColor: channelWidgetClickColor,
           highlightColor: channelWidgetClickColor,
           borderRadius: BorderRadius.circular(4),
-          onTap: () {},
+          onTap: () {
+            type == ChannelItemType.callVideo
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PrepareCallScreen()),
+                  )
+                : Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatScreen()),
+                  );
+          },
           child: Container(
             padding: const EdgeInsets.all(8),
             child:
