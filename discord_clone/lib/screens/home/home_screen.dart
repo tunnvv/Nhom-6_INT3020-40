@@ -1,6 +1,8 @@
+import 'package:discord_clone/screens/account/account_screen.dart';
+import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/screens/chat/chat_screen.dart';
-import 'package:discord_clone/screens/icons/my_flutter_app_icons.dart';
 import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/utils/overlapping_panels.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,92 +13,51 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    ChatScreen(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Settings',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 4: Account',
-      style: optionStyle,
-    ),
-  ];
-  List<PanelList> _panels = [
-    PanelList(1, "KÊNH CHAT", false),
-    PanelList(2, "KÊNH ĐÀM THOẠI", false),
-  ];
+  bool isHideBottomNavigation = true;
+  int selectedTabIndex = 0;
 
-  void _onItemTapped(int index) {
+  void onTabSelected(int index) {
     setState(() {
-      _selectedIndex = index;
+      if (index == 0) {
+        isHideBottomNavigation = true;
+      }
+      selectedTabIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      drawer: Drawer(
-        child: SingleChildScrollView(
-          child: Container(
-            child: Row(
-              children: [
-                Expanded(
-                  child: My_sever(),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: ExpansionPanelList(
-                    expansionCallback: (_panelsIndex, isExpanded) {
-                      setState(() {
-                        _panels[_panelsIndex].isExpanded = !isExpanded;
-                      });
-                    },
-                    children: _panels.map((_panel) {
-                      return ExpansionPanel(
-                          isExpanded: _panel.isExpanded,
-                          headerBuilder: (bc, status) {
-                            return Container(
-                                child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(_panel.name)));
-                          },
-                          body: Container(
-                            padding: EdgeInsets.all(10),
-                            child: ListTile(
-                              leading: Icon(MyFlutterApp.hashtag, size: 15),
-                              title: Text("chung"),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ChatScreen()));
-                              },
-                            ),
-                          ));
-                    }).toList(),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      backgroundColor: homeBackgroundColor,
+      body: selectedTabIndex == 0
+          ? OverlappingPanels(
+              left: Builder(builder: (context) {
+                return const ChannelScreen();
+              }),
+              main: Builder(
+                builder: (context) {
+                  return const ChatScreen();
+                },
+              ),
+              onSideChange: (side) {
+                setState(() {
+                  if (side == RevealSide.main) {
+                    isHideBottomNavigation = true;
+                  } else if (side == RevealSide.left) {
+                    isHideBottomNavigation = false;
+                  }
+                });
+              },
+            )
+          : selectedTabIndex == 1
+              ? const Text('Friend Screen')
+              : selectedTabIndex == 2
+                  ? const Text('Search Screen')
+                  : selectedTabIndex == 3
+                      ? const Text('Notifications Screen')
+                      : const AccountScreen(),
       bottomNavigationBar: SizedBox(
-        height: 56,
+        height: isHideBottomNavigation ? 0 : 56,
         child: BottomNavigationBar(
           elevation: 0,
           type: BottomNavigationBarType.fixed,
@@ -136,36 +97,10 @@ class _HomeScreen extends State<HomeScreen> {
               label: 'Account',
             ),
           ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
+          currentIndex: selectedTabIndex,
+          onTap: onTabSelected,
         ),
       ),
     );
   }
-}
-
-Widget My_sever() {
-  return Container(
-    padding: EdgeInsets.only(top: 15),
-    child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-      IconButton(
-        icon: Image.asset("assets/images/discord.png"),
-        iconSize: 40,
-        onPressed: () {},
-      ),
-      IconButton(
-        icon: Image.asset("assets/images/discord.png"),
-        iconSize: 40,
-        onPressed: () {},
-      )
-    ]),
-  );
-}
-
-class PanelList {
-  int index;
-  String name;
-  bool isExpanded;
-
-  PanelList(this.index, this.name, this.isExpanded);
 }

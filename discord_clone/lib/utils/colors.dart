@@ -28,6 +28,15 @@ const accountSecondaryTextColor = Color(0XFFbdbec3);
 const accountBackgroundColor = Color(0xFF363940);
 const accountWidgetClickColor = Color(0xFF43484e);
 
+// Home Screen
+const homeBackgroundColor = Color(0xFF212227);
+
+// Channel Screen
+const channelIconColor = Color(0xFF919297);
+const channelWidgetClickColor = Color(0xFF44474e);
+const channelBackgroundColor = Color(0xFF303136);
+const channelIconAddColor = Color(0xFF4aa46e);
+
 // Nguyen Manh Tuan
 
 
