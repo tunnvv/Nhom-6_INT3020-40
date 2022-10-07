@@ -1,3 +1,4 @@
+import 'package:discord_clone/screens/call/call_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -22,10 +23,14 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         leading: ElevatedButton(
-          onPressed: () {  },
+          onPressed: () {},
           style: ElevatedButton.styleFrom(
               backgroundColor: kSigninBntColor, shape: const CircleBorder()),
-          child: const Icon(Icons.expand_more, size: 26, color: Colors.white,),
+          child: const Icon(
+            Icons.expand_more,
+            size: 26,
+            color: Colors.white,
+          ),
         ),
         title: Row(
           children: const <Widget>[
@@ -42,18 +47,25 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
         ),
         actions: <Widget>[
           ElevatedButton(
-            onPressed: () {  },
+            onPressed: () {},
             style: ElevatedButton.styleFrom(
                 backgroundColor: kSigninBntColor, shape: const CircleBorder()),
-            child: const Icon(Icons.person_add, size: 26, color: Colors.white,),
-          ),ElevatedButton(
-            onPressed: () {  },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: kSigninBntColor, shape: const CircleBorder()),
-            child: const Icon(Icons.chat_bubble, size: 26, color: Colors.white,),
+            child: const Icon(
+              Icons.person_add,
+              size: 26,
+              color: Colors.white,
+            ),
           ),
-          //IconButton(onPressed: () {}, icon: const Icon(Icons.person_add)),
-          //IconButton(onPressed: () {}, icon: const Icon(Icons.chat_bubble)),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: kSigninBntColor, shape: const CircleBorder()),
+            child: const Icon(
+              Icons.chat_bubble,
+              size: 26,
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
       body: Stack(
@@ -64,16 +76,21 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
             left: 70,
             right: 65,
             child: ElevatedButton(
-              onPressed: () {  },
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
-                  backgroundColor: kSigninBntColor, shape: const CircleBorder()),
-              child: const Icon(Icons.volume_up, size: 58, color: Colors.white,),
+                  backgroundColor: kSigninBntColor,
+                  shape: const CircleBorder()),
+              child: const Icon(
+                Icons.volume_up,
+                size: 58,
+                color: Colors.white,
+              ),
             ),
           ),
           const Positioned(
             top: 250,
-            left: 70,
-            right: 65,
+            left: 50,
+            right: 50,
             child: Text(
               "Chưa có ai ở đây cả",
               textAlign: TextAlign.center,
@@ -104,27 +121,42 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
               panel: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 30,),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: () {  },
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey),
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueGrey),
                         child: const Icon(Icons.mic, size: 36),
                       ),
-                      const SizedBox(width: 35,),
+                      const SizedBox(
+                        width: 35,
+                      ),
                       ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CallScreen()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          //mainAxisSize: MainAxisSize.min,
                           children: const [
                             Text('Tham gia'),
-                            SizedBox(width: 8,),
-                            Icon(Icons.volume_up, size: 40.0,),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Icon(
+                              Icons.volume_up,
+                              size: 40.0,
+                            ),
                           ],
                         ),
                       ),
@@ -132,10 +164,6 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
                   ),
                 ],
               ),
-              // collapsed: Center(
-              //   child: IconButton(icon: Icon(Icons.horizontal_rule), onPressed: () {  },),
-              // ),
-              // borderRadius: radius,
             ),
           ),
         ],
