@@ -12,8 +12,6 @@ class TextFieldWidget extends StatefulWidget {
 }
 
 class _TextFieldWidgetState extends State<TextFieldWidget> {
-  bool _isBluetoothOn = false;
-
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -70,92 +70,90 @@ class _CallScreenState extends State<CallScreen> {
           ),
         ],
       ),
-      body: Container(
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            const SizedBox(height: 800),
-            Visibility(
-              maintainState: true,
-              maintainAnimation: true,
-              visible: true,
-              child: SlidingUpPanel(
-                color: kSigninBntColor,
-                controller: PanelController(),
-                borderRadius: radius,
-                panel: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: const CircleBorder()),
-                          child: const Icon(
-                            Icons.videocam,
-                            size: 36,
-                            color: Colors.black87,
-                          ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          const SizedBox(height: 800),
+          Visibility(
+            maintainState: true,
+            maintainAnimation: true,
+            visible: true,
+            child: SlidingUpPanel(
+              color: kSigninBntColor,
+              controller: PanelController(),
+              borderRadius: radius,
+              panel: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: const CircleBorder()),
+                        child: const Icon(
+                          Icons.videocam,
+                          size: 36,
+                          color: Colors.black87,
                         ),
-                        const SizedBox(
-                          width: 35,
+                      ),
+                      const SizedBox(
+                        width: 35,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: kSigninBntColor,
+                            shape: const CircleBorder()),
+                        child: const Icon(
+                          Icons.mobile_screen_share,
+                          size: 36,
+                          color: Colors.white,
                         ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: kSigninBntColor,
-                              shape: const CircleBorder()),
-                          child: const Icon(
-                            Icons.mobile_screen_share,
-                            size: 36,
-                            color: Colors.white,
-                          ),
+                      ),
+                      const SizedBox(
+                        width: 35,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: kSigninBntColor,
+                            shape: const CircleBorder()),
+                        child: const Icon(
+                          Icons.mic,
+                          size: 36,
+                          color: Colors.white,
                         ),
-                        const SizedBox(
-                          width: 35,
+                      ),
+                      const SizedBox(
+                        width: 35,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.square(50),
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.all(10),
+                            shape: const CircleBorder()),
+                        child: const Icon(
+                          Icons.phone_disabled,
+                          size: 36,
+                          color: Colors.white,
                         ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: kSigninBntColor,
-                              shape: const CircleBorder()),
-                          child: const Icon(
-                            Icons.mic,
-                            size: 36,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 35,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: const Size.square(50),
-                              backgroundColor: Colors.red,
-                              padding: const EdgeInsets.all(10),
-                              shape: const CircleBorder()),
-                          child: const Icon(
-                            Icons.phone_disabled,
-                            size: 36,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -18,23 +18,21 @@ class GroupChannelTitleWidget extends StatelessWidget {
       child: InkWell(
         splashColor: channelWidgetClickColor,
         highlightColor: channelWidgetClickColor,
-        child: Container(
-          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            const Icon(Icons.expand_more, size: 16, color: channelIconColor),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: channelIconColor),
-                ),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          const Icon(Icons.expand_more, size: 16, color: channelIconColor),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                name,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: channelIconColor),
               ),
             ),
-          ]),
-        ),
+          ),
+        ]),
       ),
     );
   }
