@@ -48,3 +48,24 @@
 - Call screen
 
 ![Demo Discord Clone](./img/demo_discord_clone.gif)
+
+# Tuần 06 - Thảo luận, trao đổi về cơ sở dữ liệu
+
+Tự học kiến thức về NestJS để làm backend
+
+# Tuần 07 - Nghiên cứu về cơ sở dữ liệu
+
+![Bảng chức năng và phân tích cơ sở dữ liệu](./img/database.png)
+
+# Tuần 08 - Kết quả dùng công cụ kiểm thử Monkey & Cải thiện các màn hình giao diện người dùng
+
+- Kết quả dùng công cụ kiểm thử Monkey
+
+![Monkey Testing Discord](./img/monkey.png)
+
+- Cải thiện các màn hình giao diện người dùng:
+  - Welcome Screen
+
+<img src="https://user-images.githubusercontent.com/62609188/198495996-9953f9a5-8a87-47a0-b75d-6a3787c282f5.png" width=250 alt="Before"/>
+
+<img src="./img/welcome_screen_after.jpg" width=250 alt="After"/>
