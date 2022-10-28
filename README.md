@@ -61,7 +61,9 @@ Tự học kiến thức về NestJS để làm backend
 
 - Kết quả dùng công cụ kiểm thử Monkey
 
-![Monkey Testing Discord](./img/monkey.png)
+![Monkey 1 Testing Discord](./img/monkey_1.png)
+![Monkey 2 Testing Discord](./img/monkey_2.png)
+![Monkey 3 Testing Discord](./img/monkey_3.png)
 
 - Cải thiện các màn hình giao diện người dùng:
   - Welcome Screen
