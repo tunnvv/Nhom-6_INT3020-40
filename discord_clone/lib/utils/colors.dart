@@ -8,6 +8,12 @@ const statusBarColor = Color(0xFF212227);
 const bottomNavigationColor = Color(0xFF191A1F);
 const unSelectedIconColor = Color(0xFF696A6F);
 
+// Welcome Screen
+const welcomeBackgroundColor = Color(0xFF363940);
+const welcomeSecondaryColor = Color(0xFFb6b6be);
+const welcomeRegisterButtonColor = Color(0xFF5964f2);
+const welcomeLoginButtonColor = Color(0xFF50535c);
+
 // Nguyen Van Tu
 const kPrimaryColor = Color(0xFF6F35A5);
 const kPrimaryLightColor = Color(0xFFFFFFFF);
