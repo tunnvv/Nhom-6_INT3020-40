@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
 import { ChatChannel } from "./chat_channels.schema";
+import { Message } from "./messages.schema";
 import { User } from "./user.schema";
 
 export type NotificationDocument = Notification & Document;
