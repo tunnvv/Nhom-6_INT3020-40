@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const whiteColor = Colors.white;
 const blackColor = Colors.black;
 const statusBarColor = Color(0xFF212227);
+const cursorColor = Color(0x80FFFFFF);
 
 // Bottom Navigation
 const bottomNavigationColor = Color(0xFF191A1F);
@@ -10,9 +11,16 @@ const unSelectedIconColor = Color(0xFF696A6F);
 
 // Welcome Screen
 const welcomeBackgroundColor = Color(0xFF363940);
-const welcomeSecondaryColor = Color(0xFFb6b6be);
+const welcomeSecondaryColor = Color(0xFFb9bbbe);
 const welcomeRegisterButtonColor = Color(0xFF5964f2);
 const welcomeLoginButtonColor = Color(0xFF50535c);
+
+// Signin Screen
+const signinBackgroundColor = Color(0xFF363940);
+const signinSecondaryColor = Color(0xFFb9bbbe);
+const signinTextFieldBackgroundColor = Color(0xFF212226);
+const signinLoginButtonColor = Color(0xFF5964f2);
+const signinForgotPassWordColor = Color(0xFF01acef);
 
 // Nguyen Van Tu
 const kPrimaryColor = Color(0xFF6F35A5);

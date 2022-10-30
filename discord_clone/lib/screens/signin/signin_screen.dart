@@ -1,10 +1,7 @@
 import 'package:discord_clone/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
-
-bool checkEmailandPhoneNumber(String userInfo) {
-  return true;
-}
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -14,171 +11,203 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  TextEditingController userIDController = TextEditingController();
-  TextEditingController passwdController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
 
   @override
   void dispose() {
     super.dispose();
-    userIDController.dispose();
-    passwdController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueGrey,
-      body: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          const Positioned(
-              top: 80,
-              left: 40,
-              right: 35,
-              child: Text(
-                "Chào mừng trở lại!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: kPrimaryLightColor,
-                ),
-              )),
-          const Positioned(
-              top: 125,
-              left: 40,
-              right: 35,
-              child: Text(
-                "Rất vui mừng khi được gặp lại bạn!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: kPrimaryLightColor,
-                ),
-              )),
-          const Positioned(
-              top: 175,
-              left: 20.0,
-              right: 18.0,
-              child: Text(
-                "THÔNG TIN TÀI KHOẢN",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: kPrimaryLightColor,
-                ),
-              )),
-          Positioned(
-            top: 200.0,
-            left: 20.0,
-            right: 18.0,
-            child: SizedBox(
-              width: 130.0,
-              height: 45.0,
-              child: Theme(
-                data:
-                    Theme.of(context).copyWith(splashColor: Colors.transparent),
-                child: TextField(
-                  controller: userIDController,
-                  autofocus: false,
-                  style:
-                      const TextStyle(fontSize: 18, color: kPrimaryLightColor),
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: Colors.black38,
-                    hintText: "Email hoặc số điện thoại",
-                    hintStyle: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black26,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: signinBackgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: whiteColor),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/signin_screen_background.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const <Widget>[
+                        Text(
+                          "Chào mừng trở lại!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            color: whiteColor,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Rất vui mừng khi được gặp lại bạn!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: signinSecondaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 251.0,
-            left: 20.0,
-            right: 18.0,
-            child: SizedBox(
-              width: 130.0,
-              height: 45.0,
-              child: Theme(
-                data:
-                    Theme.of(context).copyWith(splashColor: Colors.transparent),
-                child: TextField(
-                  controller: passwdController,
-                  obscureText: true,
-                  autofocus: false,
-                  style:
-                      const TextStyle(fontSize: 18, color: kPrimaryLightColor),
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: Colors.black38,
-                    hintText: "Mật khẩu",
-                    hintStyle: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black26,
+                  const SizedBox(height: 36),
+                  const Text(
+                    "THÔNG TIN TÀI KHOẢN",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: signinSecondaryColor,
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 295,
-            left: 80,
-            right: 75,
-            child: Theme(
-              data: Theme.of(context).copyWith(splashColor: Colors.transparent),
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  "Quên mật khẩu?",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: kPrimaryLightColor,
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextField(
+                      controller: usernameController,
+                      autofocus: true,
+                      cursorColor: cursorColor,
+                      style: const TextStyle(color: whiteColor),
+                      decoration: InputDecoration(
+                        hintText: "Email hoặc Số Điện Thoại",
+                        hintStyle: const TextStyle(color: signinSecondaryColor),
+                        filled: true,
+                        fillColor: signinTextFieldBackgroundColor,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 365.0,
-            left: 20.0,
-            right: 16.0,
-            child: SizedBox(
-              height: 45.0,
-              width: 130,
-              child: TextButton(
-                onPressed: () {
-                  final String userId = userIDController.text;
-                  final String pw = passwdController.text;
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextField(
+                      controller: passwordController,
+                      obscureText: _obscureText ? true : false,
+                      cursorColor: cursorColor,
+                      style: const TextStyle(color: whiteColor),
+                      decoration: InputDecoration(
+                        hintText: "Mật khẩu",
+                        hintStyle: const TextStyle(color: signinSecondaryColor),
+                        filled: true,
+                        fillColor: signinTextFieldBackgroundColor,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                        suffixIcon: IconButton(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: signinSecondaryColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                    onPressed: () {
+                      Fluttertoast.showToast(
+                        msg: "Quên mật khẩu",
+                        toastLength: Toast.LENGTH_SHORT,
+                        timeInSecForIosWeb: 1,
+                      );
+                    },
+                    child: const Text(
+                      'Quên mật khẩu?',
+                      style: TextStyle(
+                          fontSize: 12, color: signinForgotPassWordColor),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(42),
+                      padding: EdgeInsets.zero,
+                      backgroundColor: signinLoginButtonColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                    onPressed: () {
+                      final String username = usernameController.text;
+                      final String password = passwordController.text;
 
-                  if (userId == "admin" && pw == "1234") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
-                  }
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(kSignupBntColor),
-                ),
-                child: const Text(
-                  "Đăng nhập",
-                  style: TextStyle(
-                      color: kPrimaryLightColor,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold),
-                ),
+                      if (username == "admin" && password == "1234") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Đăng nhập',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
