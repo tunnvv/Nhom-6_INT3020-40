@@ -18,7 +18,6 @@ export class User {
     @Prop()
     phone: String;
 
-
     @Prop()
     pwd: String;
 
@@ -34,13 +33,13 @@ export class User {
     @Prop()
     bio: String;
 
-    // @Prop({ 
-    //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: Server.name }] 
-    // })
-    // servers: Server[];
+    @Prop({ 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Server' }] 
+    })
+    servers: Server[];
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
     })
     friends: User[];
 }

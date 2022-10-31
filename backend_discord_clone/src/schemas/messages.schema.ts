@@ -9,8 +9,11 @@ export class Message {
     @Prop()
     id: String;
 
-    @Prop()
-    user_id: String;
+    @Prop({
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+    })
+    user_id: User;
 
     @Prop()
     content: String;
@@ -23,7 +26,7 @@ export class Message {
 
     @Prop({
         type: mongoose.Types.ObjectId,
-        ref: Message.name,
+        ref: 'Message',
     })
     reply: Message
 }

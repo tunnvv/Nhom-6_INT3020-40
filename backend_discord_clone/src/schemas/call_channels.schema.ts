@@ -13,7 +13,7 @@ export class CallChannel {
     name: String;
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
     })
     members: User[];
 }

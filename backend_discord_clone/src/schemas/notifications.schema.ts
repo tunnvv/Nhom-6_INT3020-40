@@ -13,29 +13,29 @@ export class Notification {
 
     @Prop({
         type: mongoose.Types.ObjectId,
-        ref: User.name,
+        ref: 'User',
     })
     sender: User;
 
     @Prop({
         type: mongoose.Types.ObjectId,
-        ref: User.name,
+        ref: 'User',
     })
-    reciever: User;
+    receiver: User;
 
     @Prop()
     content: String;
 
     @Prop({
         type: mongoose.Types.ObjectId,
-        ref: ChatChannel.name,
+        ref: 'ChatChannel',
     })
     chat_channel: ChatChannel;
 
     @Prop()
     create_at: String;
 
-    @Prop()
+    @Prop({default: false})
     is_reply: Boolean;
 }
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

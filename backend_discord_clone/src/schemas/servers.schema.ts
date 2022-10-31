@@ -15,17 +15,17 @@ export class Server {
     name: String;
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: User.name }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
     })
     members: User[];
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: ChatChannel.name }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatChannel' }] 
     })
     chat_channels: ChatChannel[];
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: CallChannel.name }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CallChannel' }] 
     })
     call_channels: CallChannel[];
 }
