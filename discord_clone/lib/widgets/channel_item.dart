@@ -1,6 +1,6 @@
 import 'package:discord_clone/screens/call/prepare_call.dart';
-import 'package:discord_clone/screens/chat/chat_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/utils/overlapping_panels.dart';
 import "package:flutter/material.dart";
 
 enum ChannelItemType { callVideo, chat }
@@ -32,10 +32,7 @@ class ChannelItemWidget extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => const PrepareCallScreen()),
                   )
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChatScreen()),
-                  );
+                : OverlappingPanels.of(context)?.reveal(RevealSide.main);
           },
           child: Container(
             padding: const EdgeInsets.all(8),

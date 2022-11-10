@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:discord_clone/widgets/chat_item.dart';
 import 'package:flutter/material.dart';
+import '../../utils/overlapping_panels.dart';
 
 class Chat {
   final String avatar;
@@ -60,7 +61,13 @@ class _ChatScreenState extends State<ChatScreen> {
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(Icons.menu, color: chatIconColor),
-              onPressed: () {},
+              onPressed: () {
+                if (OverlappingPanels.of(context)?.translate == 0) {
+                  OverlappingPanels.of(context)?.reveal(RevealSide.left);
+                } else {
+                  OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                }
+              },
             ),
             title: const Text(
               "#kênh-công-chúa",
