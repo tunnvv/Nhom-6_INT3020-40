@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:discord_clone/widgets/chat_item.dart';
 import 'package:flutter/material.dart';
