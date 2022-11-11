@@ -1,14 +1,11 @@
-import 'package:discord_clone/screens/account/account_screen.dart';
 import 'package:discord_clone/screens/call/call_screen.dart';
 import 'package:discord_clone/screens/call/prepare_call.dart';
 import 'package:discord_clone/screens/chat/chat_screen.dart';
-import 'package:discord_clone/screens/friend/friend_screen.dart';
 import 'package:discord_clone/screens/home/home_screen.dart';
 import 'package:discord_clone/screens/signin/signin_screen.dart';
 import 'package:discord_clone/screens/welcome/welcome_screen.dart';
 import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
-import 'package:discord_clone/widgets/channel_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -70,113 +67,68 @@ class TestDiscordClone {
       await tester.tap(sendButton);
       await tester.pump();
       expect(find.text('hi!'), findsOneWidget);
-
-      // final listChannelButton = find.widgetWithIcon(IconButton, Icons.menu);
-      // await tester.tap(listChannelButton);
-      // await tester.pumpAndSettle();
-      // expect(find.byType(ChannelScreen), findsOneWidget);
-      // expect(find.text('KÊNH CHAT'), findsOneWidget);
     });
 
-    // testWidgets('drag screen to open channel screen test',
-    //     (WidgetTester tester) async {
-    //   await tester.pumpWidget(
-    //     const MaterialApp(
-    //       home: HomeScreen(),
-    //     ),
-    //   );
-    //   final messageItem = find.text('Hello');
-    //   await tester.drag(messageItem, const Offset(300.0, 0.0));
-    //   await tester.pumpAndSettle();
-    //   expect(find.text('J2Team'), findsOneWidget);
-    // });
+    testWidgets('reveal chat channel test', (WidgetTester tester) async {
+      final mockObserver = MockNavigatorObserver();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const HomeScreen(),
+          navigatorObservers: [mockObserver],
+        ),
+      );
 
-    // testWidgets('friend icon test', (WidgetTester tester) async {
-    //   final mockObserver = MockNavigatorObserver();
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: const ChannelScreen(),
-    //       navigatorObservers: [mockObserver],
-    //     ),
-    //   );
-    //   final friendIcon =
-    //       find.widgetWithIcon(BottomNavigationBarItem, Icons.people);
-    //   await tester.tap(friendIcon);
-    //   await tester.pumpAndSettle();
-    //   expect(find.byType(FriendScreen), findsOneWidget);
-    //   expect(find.text('Bạn bè'), findsOneWidget);
-    // });
+      final listChannelButton = find.widgetWithIcon(IconButton, Icons.menu);
+      await tester.tap(listChannelButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChannelScreen), findsOneWidget);
 
-    // testWidgets('account icon test', (WidgetTester tester) async {
-    //   final mockObserver = MockNavigatorObserver();
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: const ChannelScreen(),
-    //       navigatorObservers: [mockObserver],
-    //     ),
-    //   );
-    //   final accountIcon =
-    //       find.widgetWithIcon(BottomNavigationBarItem, Icons.emoji_emotions);
-    //   await tester.tap(accountIcon);
-    //   await tester.pumpAndSettle();
-    //   expect(find.byType(AccountScreen), findsOneWidget);
-    //   expect(find.text('Tài khoản'), findsOneWidget);
-    // });
+      final channel = find.widgetWithText(ExpansionTile, 'KÊNH CHAT').last;
+      await tester.tap(channel);
+      await tester.pump(const Duration(milliseconds: 1000));
 
-    // testWidgets('chat channel test', (WidgetTester tester) async {
-    //   final mockObserver = MockNavigatorObserver();
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: const ChannelScreen(),
-    //       navigatorObservers: [mockObserver],
-    //     ),
-    //   );
-    //   final channelList = find.widgetWithText(ExpansionTile, 'KÊNH CHAT');
-    //   await tester.tap(channelList);
-    //   await tester.pump();
+      const key = Key('expansionTileChannel5');
+      final chatChannel = find.byKey(key);
 
-    //   final chatChannel = find.widgetWithText(ChannelItemWidget, 'chung');
-    //   await tester.tap(chatChannel);
-    //   await tester.pumpAndSettle();
-    //   expect(find.byType(ChatScreen), findsOneWidget);
-    //   expect(find.text('#kênh-công-chúa'), findsOneWidget);
-    // });
+      await tester.tap(chatChannel);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatScreen), findsOneWidget);
+      expect(find.text('#kênh-công-chúa'), findsOneWidget);
+    });
 
-    // testWidgets('call channel test', (WidgetTester tester) async {
-    //   final mockObserver = MockNavigatorObserver();
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: const ChannelScreen(),
-    //       navigatorObservers: [mockObserver],
-    //     ),
-    //   );
-    //   final channelList = find.widgetWithText(ExpansionTile, 'KÊNH CHAT');
-    //   await tester.tap(channelList);
-    //   await tester.pump();
+    testWidgets('call channel test', (WidgetTester tester) async {
+      final mockObserver = MockNavigatorObserver();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const HomeScreen(),
+          navigatorObservers: [mockObserver],
+        ),
+      );
 
-    //   final callChannel = find.widgetWithText(ChannelItemWidget, 'Phòng chờ');
-    //   await tester.tap(callChannel);
-    //   await tester.pumpAndSettle();
-    //   expect(find.byType(PrepareCallScreen), findsOneWidget);
-    //   expect(find.text('Chat'), findsOneWidget);
-    // });
+      final listChannelButton = find.widgetWithIcon(IconButton, Icons.menu);
+      await tester.tap(listChannelButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChannelScreen), findsOneWidget);
 
-    // testWidgets('go back button in prepare call screen test',
-    //     (WidgetTester tester) async {
-    //   final mockObserver = MockNavigatorObserver();
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: const PrepareCallScreen(),
-    //       navigatorObservers: [mockObserver],
-    //     ),
-    //   );
+      final channel = find.widgetWithText(ExpansionTile, 'KÊNH CHAT').last;
+      await tester.tap(channel);
+      await tester.pump(const Duration(milliseconds: 1000));
 
-    //   final gobackButton = find.widgetWithIcon(ElevatedButton, Icons.expand_more);
-    //   await tester.tap(gobackButton);
-    //   await tester.pumpAndSettle();
-    //   expect(find.byType(ChannelScreen), findsOneWidget);
-    //   expect(find.text('J2Team'), findsOneWidget);
-    // });
+      const key = Key('expansionTileChannel5');
+      final callChannel = find.byKey(key);
+
+      await tester.tap(callChannel);
+      await tester.pumpAndSettle();
+      expect(find.byType(PrepareCallScreen), findsOneWidget);
+      expect(find.text('Chưa có ai ở đây cả'), findsOneWidget);
+
+      final gobackButton =
+          find.widgetWithIcon(ElevatedButton, Icons.expand_more);
+      await tester.tap(gobackButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChannelScreen), findsOneWidget);
+      expect(find.text('J2Team'), findsOneWidget);
+    });
 
     testWidgets('call button in prepare call screen test',
         (WidgetTester tester) async {

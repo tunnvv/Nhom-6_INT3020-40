@@ -1,4 +1,3 @@
-import 'package:discord_clone/screens/home/home_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:discord_clone/screens/welcome/welcome_screen.dart';
