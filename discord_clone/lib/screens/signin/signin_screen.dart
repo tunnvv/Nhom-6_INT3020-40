@@ -1,6 +1,6 @@
 import 'package:discord_clone/screens/home/home_screen.dart';
+import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
-import '../../utils/colors.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SigninScreen extends StatefulWidget {

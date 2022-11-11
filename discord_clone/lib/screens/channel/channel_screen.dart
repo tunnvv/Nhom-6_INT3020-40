@@ -90,21 +90,24 @@ class _ChannelScreenState extends State<ChannelScreen> {
                             itemCount: 6,
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {
-                              return const ExpansionTile(
+                              return ExpansionTile(
+                                key: Key('expansionTile$index'),
                                 backgroundColor: channelBackgroundColor,
-                                title:
-                                    GroupChannelTitleWidget(name: "KÊNH CHAT"),
+                                title: const GroupChannelTitleWidget(
+                                    name: "KÊNH CHAT"),
                                 tilePadding:
-                                    EdgeInsets.symmetric(horizontal: 6),
-                                trailing:
-                                    Icon(Icons.add, color: channelIconColor),
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                trailing: const Icon(Icons.add,
+                                    color: channelIconColor),
                                 controlAffinity:
                                     ListTileControlAffinity.trailing,
                                 children: <Widget>[
                                   ChannelItemWidget(
+                                      key: Key('expansionTitleChannel$index'),
                                       type: ChannelItemType.chat,
                                       name: "chung"),
                                   ChannelItemWidget(
+                                      key: Key('expansionTitleChannel$index'),
                                       type: ChannelItemType.callVideo,
                                       name: "Phòng chờ")
                                 ],
