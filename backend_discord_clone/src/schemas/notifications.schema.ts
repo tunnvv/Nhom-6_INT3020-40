@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from "mongoose";
+import { Transform, Type } from "class-transformer";
+import mongoose, { ObjectId, Document } from "mongoose";
 import { ChatChannel } from "./chat_channels.schema";
 import { Message } from "./messages.schema";
 import { User } from "./user.schema";
@@ -8,34 +9,28 @@ export type NotificationDocument = Notification & Document;
 
 @Schema()
 export class Notification {
-    @Prop()
-    id: String;
+    @Transform(({ value }) => value.toString())
+    _id: ObjectId;
 
-    @Prop({
-        type: mongoose.Types.ObjectId,
-        ref: User.name,
-    })
+    @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
+    @Type(() => User)
     sender: User;
 
-    @Prop({
-        type: mongoose.Types.ObjectId,
-        ref: User.name,
-    })
-    reciever: User;
+    @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
+    @Type(() => User)
+    receiver: User;
 
     @Prop()
-    content: String;
+    content: string;
 
-    @Prop({
-        type: mongoose.Types.ObjectId,
-        ref: ChatChannel.name,
-    })
+    @Prop({ type: mongoose.Types.ObjectId, ref: 'ChatChannel' })
+    @Type(() => ChatChannel)
     chat_channel: ChatChannel;
 
     @Prop()
-    create_at: String;
+    create_at: string;
 
-    @Prop()
-    is_reply: Boolean;
+    @Prop({default: false})
+    is_reply: boolean;
 }
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

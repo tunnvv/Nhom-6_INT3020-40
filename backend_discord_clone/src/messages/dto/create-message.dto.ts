@@ -1,5 +1,5 @@
 export class CreateMessageDto {
-    id: string;
+    _id: string;
     user_id: string;
     content: string;
     create_at: string;

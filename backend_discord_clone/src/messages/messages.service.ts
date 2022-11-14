@@ -23,7 +23,7 @@ export class MessagesService {
     return messages;
   }
 
-  async findOne(id: string) {
+  async findOneByObjID(id: string) {
     const message = await this.messageModel.findOne({id}).exec();
     if (!message) {
       throw new HttpException("Not Found", 404);
