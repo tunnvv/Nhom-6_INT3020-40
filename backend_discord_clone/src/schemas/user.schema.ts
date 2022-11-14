@@ -1,46 +1,79 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from "mongoose";
+import { Exclude, Transform, Type } from "class-transformer";
+import mongoose, { Document, ObjectId } from "mongoose";
 import { Server } from "./servers.schema";
+
+import {} from '@nestjs/common'
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
+
 
 export type UserDocument = User & Document;
 
+
 @Schema()
 export class User {
-    @Prop()
-    id: String;
+    @Transform(({ value }) => value.toString())
+    _id: ObjectId;
 
-    @Prop()
-    name: String;
+    @Prop({unique: true})
+    _uid: string // nguyenvantu#1234
 
-    @Prop()
-    email: String;
+    @ApiProperty({required: true})
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    @Prop({required: true})
+    name: string;
 
-    @Prop()
-    phone: String;
+    @ApiProperty({required: true})
+    @IsEmail()
+    @IsString()
+    @MinLength(4)
+    @Prop({unique: true})
+    email: string;
 
-    @Prop()
-    pwd: String;
+    @ApiProperty()
+    @Prop({unique: true})
+    phone: string;
 
-    @Prop()
-    status: String;
+    @ApiProperty({required: true})
+    @IsString()
+    @MinLength(8)
+    @Prop({required: true})
+    @Exclude()
+    pwd: string;
 
+    @ApiProperty({required: false})
     @Prop()
-    wallpaper: String;
+    status?: string;
 
+    @ApiProperty({required: false})
     @Prop()
-    avatar: String;
+    wallpaper?: string;
 
+    @ApiProperty({required: false})
     @Prop()
-    bio: String;
+    avatar?: string;
 
-    @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Server' }] 
+    @ApiProperty({required: false})
+    @Prop()
+    bio?: string;
+
+
+    @ApiProperty({required: false})
+    @Prop({
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Server' }],
     })
-    servers: Server[];
+    @Type(() => Server)
+    servers?: Server;
 
-    @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
+
+    @ApiProperty({required: false})
+    @Prop({
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     })
-    friends: User[];
+    @Type(() => User)
+    friends?: User;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

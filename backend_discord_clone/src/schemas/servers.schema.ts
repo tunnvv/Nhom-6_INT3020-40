@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Transform, Type } from "class-transformer";
 import mongoose, { Document } from "mongoose";
 import { CallChannel } from "./call_channels.schema";
 import { ChatChannel } from "./chat_channels.schema";
@@ -8,25 +9,28 @@ export type ServerDocument = Server & Document;
 
 @Schema()
 export class Server {
-    @Prop()
-    id: String;
+    @Transform(({ value }) => value.toString())
+    _id: string;
 
-    @Prop()
-    name: String;
-
-    @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
-    })
-    members: User[];
+    @Prop({required: true})
+    name: string;
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatChannel' }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     })
-    chat_channels: ChatChannel[];
+    @Type(() => User)
+    members: User;
 
     @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CallChannel' }] 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatChannel' }], 
     })
-    call_channels: CallChannel[];
+    @Type(() => ChatChannel)
+    chat_channels: ChatChannel;
+
+    @Prop({ 
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CallChannel' }], 
+    })
+    @Type(() => CallChannel)
+    call_channels: CallChannel;
 }
 export const ServerSchema = SchemaFactory.createForClass(Server);

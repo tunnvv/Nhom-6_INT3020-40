@@ -1,20 +1,22 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from "mongoose";
+import { Transform, Type } from "class-transformer";
+import mongoose, { ObjectId, Document } from "mongoose";
 import { User } from "./user.schema";
 
 export type CallChannelDocument = CallChannel & Document;
 
 @Schema()
 export class CallChannel {
-    @Prop()
-    id: String;
+    @Transform(({ value }) => value.toString())
+    _id: ObjectId;
 
     @Prop()
-    name: String;
+    name: string;
 
-    @Prop({ 
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
+    @Prop({
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     })
-    members: User[];
+    @Type(() => User)
+    members: User;
 }
 export const CallChannelSchema = SchemaFactory.createForClass(CallChannel);

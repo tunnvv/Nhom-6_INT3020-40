@@ -16,7 +16,7 @@ export class ServersService {
   }
 
   async findAll() {
-    const servers = await this.serverModel.find().exec();
+    const servers = await this.serverModel.find().populate(['members', 'chat_channels', 'call_channels']);
     if (!servers || !servers[0]) {
       throw new HttpException("Not Found", 404);
     }
