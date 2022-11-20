@@ -1,15 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CallChannelsService } from './call_channels.service';
 import { CreateCallChannelDto } from './dto/create-call_channel.dto';
 import { UpdateCallChannelDto } from './dto/update-call_channel.dto';
 
+@ApiTags('call-channels')
 @Controller('call-channels')
 export class CallChannelsController {
   constructor(private readonly callChannelsService: CallChannelsService) {}
 
   @Post()
   create(@Body() createCallChannelDto: CreateCallChannelDto) {
-    return this.callChannelsService.create(createCallChannelDto);
+    return this.callChannelsService.createCallChannel(createCallChannelDto);
   }
 
   @Get()
