@@ -16,5 +16,5 @@ export class CreateMessageDto {
     update_at: string;
 
     @ApiProperty({required: false})
-    reply: string;      // message_id
+    reply_mes_id: string;      // message_id
 }

@@ -23,12 +23,19 @@ export class MessagesService {
   }
 
   async findAll() {
-    const messages = await this.messageModel.find().populate('user_id', ['_uid', 'name', 'avatar']).exec();
+    const messages = await this.messageModel.find()
+    .populate('user_id', ['_uid', 'name', 'avatar'])
+    .populate('reply_mes_id', ['_id', 'content'])
+    .exec();
+
     return messages
   }
 
   async findOneByObjID(id: string) {
-    const message = await (await this.messageModel.findOne({_id: id})).populate('user_id', ['_uid', 'name', 'avatar']);
+    const message = await (await (await this.messageModel.findOne({_id: id}))
+    .populate('user_id', ['_uid', 'name', 'avatar']))
+    .populate('reply_mes_id', ['_id', 'content']);
+    
     // If content is null, return null
     if (!message.content) {
       return;
@@ -37,12 +44,14 @@ export class MessagesService {
   }
 
   async update(id: string, updateMessageDto: UpdateMessageDto) {
+
+    // update time, content
     if (updateMessageDto.content) {
       // get current miliseconds time and set to create_at
       updateMessageDto.update_at = Date.now().toString();
-      return this.messageModel.updateOne({_id: id}, updateMessageDto);
     }
-    return null;
+
+    return this.messageModel.updateOne({_id: id}, updateMessageDto);
   }
 
   async remove(id: string) {
