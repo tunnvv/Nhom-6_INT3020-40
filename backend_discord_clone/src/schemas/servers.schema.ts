@@ -31,6 +31,7 @@ export class Server {
     @Type(() => ChatChannel)
     chat_channels: string[] = [];
 
+    @ApiProperty({required: false})
     @Prop({ 
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CallChannel' }], 
     })
