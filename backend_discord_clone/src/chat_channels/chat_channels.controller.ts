@@ -1,8 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ChatChannelsService } from './chat_channels.service';
 import { CreateChatChannelDto } from './dto/create-chat_channel.dto';
 import { UpdateChatChannelDto } from './dto/update-chat_channel.dto';
 
+@ApiTags('chat-channels')
 @Controller('chat-channels')
 export class ChatChannelsController {
   constructor(private readonly chatChannelsService: ChatChannelsService) {}
