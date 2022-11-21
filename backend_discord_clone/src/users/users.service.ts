@@ -29,7 +29,7 @@ export class UsersService {
   }
 
   async findAll(name?: string): Promise<User[]> {
-    const users =  await this.userModel.find().exec();
+    const users =  await this.userModel.find().populate('friends', ['_uid', 'name', 'avatar']).exec();
 
     if (name) {
       return users.filter(user => user.name === name);
@@ -56,6 +56,8 @@ export class UsersService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
 
+    const user = this.userModel.findOne({_id: id}).exec();
+
     // if name changed, must change _uid
     if (updateUserDto.name) {
       // create new uid
@@ -66,6 +68,16 @@ export class UsersService {
       }
       // set final uid
       updateUserDto._uid = uid;
+    }
+
+    // add new friend
+    if (updateUserDto.friends) {
+      updateUserDto.friends = updateUserDto.friends.concat((await user).friends);
+    }
+
+    // add new server
+    if (updateUserDto.servers) {
+      updateUserDto.servers = updateUserDto.servers.concat((await user).servers);
     }
 
     return this.userModel.updateOne({_id: id}, updateUserDto);

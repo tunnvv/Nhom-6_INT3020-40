@@ -66,7 +66,7 @@ export class User {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Server' }],
     })
     @Type(() => Server)
-    servers?: Server;
+    servers?: string[] = [];
 
 
     @ApiProperty({required: false})
@@ -74,6 +74,6 @@ export class User {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     })
     @Type(() => User)
-    friends?: User;
+    friends?: string[] = [];
 }
 export const UserSchema = SchemaFactory.createForClass(User);

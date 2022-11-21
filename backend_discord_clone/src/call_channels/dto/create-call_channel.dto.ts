@@ -1,5 +1,15 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { ObjectId } from "mongoose";
+
 export class CreateCallChannelDto {
-    id: string;
+    // _id: string;
+
+    @ApiProperty({required: true})
     name: string;
-    members: []; // list user_id
+
+    @ApiProperty({required: true})
+    creatorId: string;
+
+    @ApiProperty({required: false})
+    members: string[] = [];
 }

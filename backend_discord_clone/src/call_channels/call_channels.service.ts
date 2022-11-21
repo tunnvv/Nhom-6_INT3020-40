@@ -10,21 +10,31 @@ export class CallChannelsService {
 
   constructor(@InjectModel(CallChannel.name) private callChannelModel: Model<CallChannelDocument>) {}
 
-  async create(createCallChannelDto: CreateCallChannelDto): Promise<CallChannel> {
-    const user = new this.callChannelModel(createCallChannelDto);
-    return user.save();
+  async createCallChannel(createCallChannelDto: CreateCallChannelDto): Promise<CallChannel> {
+    const callChannel = new this.callChannelModel(createCallChannelDto);
+
+    // store start pepple is the first member
+    callChannel.members.push(createCallChannelDto.creatorId);
+
+    return callChannel.save();
   }
 
   async findAll(): Promise<any> {
-    const call_channels = await this.callChannelModel.find().exec();
-    if (!call_channels || !call_channels[0]) {
+    const call_channels = await this.callChannelModel.find()
+    .populate('members', ['_uid', 'name', 'avatar'])
+    .exec();
+
+    if (!call_channels) {
       throw new HttpException('Not Found', 404);
     }
     return call_channels;
   }
 
   async findOne(id: string) {
-    const user = await this.callChannelModel.findOne({id}).exec();
+    const user = await this.callChannelModel.findOne({id})
+    .populate('members', ['_uid', 'name', 'avatar'])
+    .exec();
+
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
@@ -32,7 +42,14 @@ export class CallChannelsService {
   }
 
   async update(id: string, updateCallChannelDto: UpdateCallChannelDto) {
-    return `This action updates a #${id} user`;
+    const cc = this.callChannelModel.findOne({_id: id});
+
+    // add people to call channel
+    if (updateCallChannelDto.members) {
+      updateCallChannelDto.members = updateCallChannelDto.members.concat((await cc).members);
+    }
+
+    return this.callChannelModel.updateOne({_id: id}, updateCallChannelDto);
   }
 
   async remove(id: string) {

@@ -37,6 +37,7 @@ export class UsersController {
     return user
   }
 
+  @ApiOkResponse({description: "Successfully updated user's infomation"})
   @Patch('users/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);

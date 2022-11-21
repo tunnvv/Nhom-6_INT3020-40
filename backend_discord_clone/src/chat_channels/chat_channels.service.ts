@@ -16,23 +16,37 @@ export class ChatChannelsService {
   }
 
   async findAll(): Promise<any> {
-    const chat_channels = await this.chatChannelModel.find().exec();
-    if (!chat_channels || !chat_channels[0]) {
-      throw new HttpException("Not Found", 404);
-    }
+    const chat_channels = await this.chatChannelModel.find()
+    .populate('members',['_uid', 'name', 'avatar'])
+    .populate('messages')
+    .exec();
+
     return chat_channels;
   }
 
   async findOne(id: string) {
-    const chat_channel = await this.chatChannelModel.findOne({id}).exec();
-    if (!chat_channel) {
-      throw new HttpException("Not Found", 404);
-    }
+    const chat_channel = await this.chatChannelModel.findOne({id})
+    .populate('members',['_uid', 'name', 'avatar'])
+    .populate('messages')
+    .exec();
+
     return chat_channel;
   }
 
   async update(id: string, updateChatChannelDto: UpdateChatChannelDto) {
-    return `This action updates a #${id} chatChannel`;
+    const cc = this.chatChannelModel.findOne({_id: id}).exec();
+    
+    // add new member to group chat
+    if (updateChatChannelDto.members) {
+      updateChatChannelDto.members = updateChatChannelDto.members.concat((await cc).members);
+    }
+
+    // add new message
+    if (updateChatChannelDto.messages) {
+      updateChatChannelDto.messages = updateChatChannelDto.messages.concat((await cc).messages);
+    }
+
+    return this.chatChannelModel.findOneAndUpdate({_id: id}, updateChatChannelDto);
   }
 
   async remove(id: string) {

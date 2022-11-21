@@ -30,8 +30,8 @@ export class CreateUserDto {
     bio?: string;
 
     @ApiProperty({default:null ,required: false})
-    servers?: [];
+    servers?: string[] = [];
 
     @ApiProperty({default:null ,required: false})
-    friends?: [];
+    friends?: string[] = [];
 }
