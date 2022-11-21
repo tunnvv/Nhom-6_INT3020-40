@@ -14,18 +14,18 @@ export class Notification {
 
     @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
     @Type(() => User)
-    sender: User;
+    sender: string;
 
     @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
     @Type(() => User)
-    receiver: User;
+    receiver: string;
 
     @Prop()
     content: string;
 
     @Prop({ type: mongoose.Types.ObjectId, ref: 'ChatChannel' })
     @Type(() => ChatChannel)
-    chat_channel: ChatChannel;
+    chat_channel: string;
 
     @Prop()
     create_at: string;
