@@ -11,7 +11,9 @@ import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/discord_clone'),
+    MongooseModule.forRoot(
+      'mongodb+srv://nvtuu:8o6eEszG4nTna901@cluster0.paz9bs4.mongodb.net/my_discord_clone_db?retryWrites=true&w=majority'
+    ),
     UsersModule,
     CallChannelsModule,
     MessagesModule,
