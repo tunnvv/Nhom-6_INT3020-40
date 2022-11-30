@@ -7,7 +7,7 @@ import { User } from 'src/users/schemas';
 
 export type ChatChannelDocument = ChatChannel & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class ChatChannel {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;

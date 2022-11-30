@@ -4,10 +4,26 @@ import mongoose, { Document, ObjectId } from 'mongoose';
 
 import {} from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { Server } from 'src/servers/schemas';
 
 export type UserDocument = User & Document;
+
+export class ShortUserInfo {
+  _id: string;
+  _uid: string;
+  name: string;
+  avatar: string;
+  wallpaper: string;
+  status: string;
+  bio: string;
+}
 
 @Schema()
 export class User {
@@ -18,45 +34,38 @@ export class User {
   _uid: string; // nguyenvantu#1234
 
   @ApiProperty({ required: true })
+  @Prop({ default: 'nonome' })
   @IsString()
   @MinLength(4)
   @MaxLength(20)
-  @Prop({ required: true })
   name: string;
 
   @ApiProperty({ required: true })
+  @Prop({ unique: true, required: true })
   @IsEmail()
   @IsString()
-  @MinLength(4)
-  @Prop({ unique: true })
+  @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
-  @Prop({ unique: true })
-  phone: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  @MinLength(8)
-  @Prop({ required: true })
-  @Exclude()
-  pwd: string;
+  @ApiProperty({ required: false })
+  @Prop({ required: false })
+  hashedPassword?: string;
 
   @ApiProperty({ required: false })
-  @Prop()
-  status?: string;
+  @Prop({ default: 'Online' })
+  status: 'Online' | 'Offline';
 
   @ApiProperty({ required: false })
-  @Prop()
-  wallpaper?: string;
+  @Prop({ default: 'link image' })
+  wallpaper: string;
 
   @ApiProperty({ required: false })
-  @Prop()
-  avatar?: string;
+  @Prop({ default: 'link image' })
+  avatar: string;
 
   @ApiProperty({ required: false })
-  @Prop()
-  bio?: string;
+  @Prop({ default: '' })
+  bio: string;
 
   @ApiProperty({ required: false })
   @Prop({

@@ -5,7 +5,7 @@ import mongoose, { ObjectId, Document } from 'mongoose';
 
 export type CallChannelDocument = CallChannel & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class CallChannel {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;

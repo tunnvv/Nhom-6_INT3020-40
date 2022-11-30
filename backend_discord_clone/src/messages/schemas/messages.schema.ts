@@ -6,7 +6,7 @@ import { User } from 'src/users/schemas';
 
 export type MessageDocument = Message & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Message {
   // auto gen
   @Transform(({ value }) => value.toString())
@@ -15,23 +15,15 @@ export class Message {
   @ApiProperty({ required: true })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
   @Type(() => User)
-  user_id: string;
+  userId: string;
 
   @ApiProperty({ required: true })
   @Prop()
   content: string;
 
-  @ApiProperty({ required: true })
-  @Prop()
-  create_at: string;
-
-  @ApiProperty({ required: false })
-  @Prop()
-  update_at: string;
-
   @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'Message' })
   @Type(() => Message)
-  reply_mes_id: string;
+  replyMessageId: string;
 }
 export const MessageSchema = SchemaFactory.createForClass(Message);

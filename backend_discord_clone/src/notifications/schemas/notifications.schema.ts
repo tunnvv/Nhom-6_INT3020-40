@@ -2,13 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import mongoose, { ObjectId, Document } from 'mongoose';
-
 import { ChatChannel } from 'src/chat_channels/schemas';
 import { User } from 'src/users/schemas';
 
 export type NotificationDocument = Notification & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Notification {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
@@ -30,14 +29,10 @@ export class Notification {
   @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'ChatChannel' })
   @Type(() => ChatChannel)
-  chat_channel: string;
-
-  @ApiProperty({ required: false })
-  @Prop()
-  create_at: string;
+  chatChannel: string;
 
   @ApiProperty({ required: false })
   @Prop({ default: false })
-  is_reply: boolean;
+  isReply: boolean;
 }
 export const NotificationSchema = SchemaFactory.createForClass(Notification);
