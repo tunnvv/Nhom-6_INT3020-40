@@ -1,35 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import { CreateUserDto, UpdateUserDto } from './dto';
-import { User, UserDocument } from './schemas';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { gen_user_id } from 'src/utils/func.backup';
+import { JwtService } from '@nestjs/jwt';
+import { ShortUserInfo, User, UserDocument } from './schemas';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-
-  // Create a user with input infomation
-  // Auto gen user_id: name + "#" + rand_number(0000 -> 9999)
-
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user = new this.userModel(createUserDto);
-
-    // create new uid
-    let uid = gen_user_id(user.name);
-    // if duplication, create new uid
-    while (await this.userModel.findOne({ _uid: uid })) {
-      uid = gen_user_id(user.name);
-    }
-    // set final uid
-    user._uid = uid;
-    return user.save();
-  }
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
 
   async findAll(name?: string): Promise<User[]> {
     const users = await this.userModel
       .find()
+      .lean()
       .populate('friends', ['_uid', 'name', 'avatar'])
       .exec();
 
@@ -39,23 +26,37 @@ export class UsersService {
     return users;
   }
 
-  async findUserByObjID(id: string): Promise<User> {
-    const user = await this.userModel.findOne({ _id: id }).exec();
-    return user;
+  async findUserByObjID(id: string): Promise<ShortUserInfo> {
+    const user = await this.userModel.findOne({ _id: id }).lean().exec();
+    return {
+      _id: user._id,
+      _uid: user._uid,
+      name: user.name,
+      avatar: user.avatar,
+      status: user.status,
+      bio: user.bio,
+      wallpaper: user.wallpaper,
+    };
   }
 
   async findUserByNameID(uid: string): Promise<User> {
-    const user = await this.userModel.findOne({ uid: uid }).exec();
+    const user = await this.userModel.findOne({ uid: uid }).lean().exec();
     return user;
   }
 
-  async findUserByEmail(email: string): Promise<User> {
-    const user = await this.userModel.findOne({ email: email }).exec();
+  async getFullUserInfoById(_id: string): Promise<User> {
+    const user = await this.userModel
+      .findOne({ _id })
+      .lean()
+      .populate('friends', ['_id', '_uid', 'avatar', 'wallpaper', 'bio'])
+      .populate('servers')
+      .exec();
+
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = this.userModel.findOne({ _id: id }).exec();
+  async update(_id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userModel.findOne({ _id }).lean().exec();
 
     // if name changed, must change _uid
     if (updateUserDto.name) {
@@ -65,7 +66,6 @@ export class UsersService {
       while (await this.userModel.findOne({ _uid: uid })) {
         uid = gen_user_id(updateUserDto.name);
       }
-      // set final uid
       updateUserDto._uid = uid;
     }
 
@@ -74,6 +74,7 @@ export class UsersService {
       updateUserDto.friends = updateUserDto.friends.concat(
         (await user).friends,
       );
+      updateUserDto.friends = [...new Set(updateUserDto.friends)];
     }
 
     // add new server
@@ -83,11 +84,21 @@ export class UsersService {
       );
     }
 
-    return this.userModel.updateOne({ _id: id }, updateUserDto);
+    return this.userModel.updateOne({ _id }, updateUserDto);
   }
 
-  async remove(id: string) {
-    const user = await this.userModel.deleteOne({ _id: id }).exec();
-    return user;
+  async updateFriendListById(_id: string, friend: string) {
+    const user = await this.userModel.findOne({ _id }).lean().exec();
+    let newFriends = [friend].concat(user.friends);
+    const tmp = [];
+    newFriends = newFriends.reduce((friendListNotDuplicate, element) => {
+      if (!tmp.includes(element.toString())) {
+        friendListNotDuplicate.push(element);
+        tmp.push(element.toString());
+      }
+      return friendListNotDuplicate;
+    }, []);
+
+    return this.userModel.updateOne({ _id }, { friends: newFriends });
   }
 }

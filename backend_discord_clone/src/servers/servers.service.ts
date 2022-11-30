@@ -19,8 +19,8 @@ export class ServersService {
     const servers = await this.serverModel
       .find()
       .populate('members', ['_uid', 'name', 'avatar'])
-      .populate('chat_channels')
-      .populate('call_channels')
+      .populate('chatChannels')
+      .populate('callChannels')
       .exec();
 
     return servers;
@@ -30,8 +30,8 @@ export class ServersService {
     const server = await this.serverModel
       .findOne({ id })
       .populate('members', ['_uid', 'name', 'avatar'])
-      .populate('chat_channels')
-      .populate('call_channels')
+      .populate('chatChannels')
+      .populate('callChannels')
       .exec();
 
     return server;
@@ -46,15 +46,15 @@ export class ServersService {
       );
     }
 
-    if (updateServerDto.chat_channels) {
-      updateServerDto.chat_channels = updateServerDto.chat_channels.concat(
-        (await server).chat_channels,
+    if (updateServerDto.chatChannels) {
+      updateServerDto.chatChannels = updateServerDto.chatChannels.concat(
+        (await server).chatChannels,
       );
     }
 
-    if (updateServerDto.call_channels) {
-      updateServerDto.call_channels = updateServerDto.call_channels.concat(
-        (await server).call_channels,
+    if (updateServerDto.callChannels) {
+      updateServerDto.callChannels = updateServerDto.callChannels.concat(
+        (await server).callChannels,
       );
     }
 
