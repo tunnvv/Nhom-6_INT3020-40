@@ -5,8 +5,8 @@ export class CreateChatChannelDto {
   name: string;
 
   @ApiProperty({ required: false })
-  members: string[] = []; // list user_id
+  hostId?: string;
 
   @ApiProperty({ required: false })
-  messages: string[] = []; // list message_id
+  serverId?: string;
 }

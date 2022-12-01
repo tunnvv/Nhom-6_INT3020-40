@@ -1,58 +1,95 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
   Param,
   Delete,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import { AuthGuard } from '@nestjs/passport';
 import { ChatChannelsService } from './chat_channels.service';
 import { CreateChatChannelDto, UpdateChatChannelDto } from './dto';
+import ResponseData from 'src/utils/response-data';
 
-@ApiTags('chat-channels')
+@Controller('chat-channels')
+@ApiTags('Chat channels')
+@ApiBearerAuth()
+@ApiForbiddenResponse({ description: 'Permission denied' })
+@UseGuards(AuthGuard('jwt'))
 @Controller('chat-channels')
 export class ChatChannelsController {
   constructor(private readonly chatChannelsService: ChatChannelsService) {}
 
-  @ApiOkResponse({ description: 'Successfully create chat channel' })
+  @ApiOperation({
+    summary: 'Create a new chat channel',
+    description: 'Create a new chat channel',
+  })
+  @ApiOkResponse({ description: 'Create a new chat channel successfully' })
+  @ApiBadRequestResponse({ description: 'Create a new chat channel failed' })
   @Post()
-  create(@Body() createChatChannelDto: CreateChatChannelDto) {
-    return this.chatChannelsService.create(createChatChannelDto);
+  async create(
+    @Req() request,
+    @Body() createChatChannelDto: CreateChatChannelDto,
+  ) {
+    const { _id } = request.user;
+    createChatChannelDto.hostId = _id;
+    await this.chatChannelsService.create(createChatChannelDto);
+    return new ResponseData(
+      true,
+      { message: 'Create a new chat channel successfully' },
+      null,
+    );
   }
 
-  @ApiOkResponse({
-    isArray: true,
-    description: 'Successfully returned all chat channels',
+  @ApiOperation({
+    summary: 'Owner updates a chat channel by ID',
+    description: 'Owner updates a chat channel by ID',
   })
-  @Get()
-  findAll() {
-    return this.chatChannelsService.findAll();
-  }
-
-  @ApiOkResponse({ description: 'Successfully finded chat channels by Id' })
-  @ApiNotFoundResponse({
-    description: "Can't find. The chat channel's id doesn't exits",
-  })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatChannelsService.findOne(id);
-  }
-
-  @ApiOkResponse({ description: "Successfully updated chat channel's content" })
+  @ApiOkResponse({ description: 'Update a chat channel by ID successfully' })
+  @ApiBadRequestResponse({ description: 'Update a chat channel by ID failed' })
   @Patch(':id')
-  update(
+  async update(
+    @Req() request,
     @Param('id') id: string,
     @Body() updateChatChannelDto: UpdateChatChannelDto,
   ) {
-    return this.chatChannelsService.update(id, updateChatChannelDto);
+    const { _id: hostId } = request.user;
+    await this.chatChannelsService.update(id, hostId, updateChatChannelDto);
+    return new ResponseData(
+      true,
+      { message: 'Update a chat channel by ID successfully' },
+      null,
+    );
   }
 
-  @ApiOkResponse({ description: 'Successfully deleted chat channel' })
+  @ApiOperation({
+    summary: 'Owner deletes a chat channel by ID',
+    description: 'Owner deletes a chat channel by ID',
+  })
+  @ApiOkResponse({ description: 'Delete a chat channel by ID successfully' })
+  @ApiBadRequestResponse({ description: 'Delete a chat channel by ID failed' })
   @ApiNotFoundResponse({ description: "Can't find chat channel to delete" })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatChannelsService.remove(id);
+  async remove(@Req() request, @Param('id') chatChannelId: string) {
+    const { _id: hostId } = request.user;
+    await this.chatChannelsService.remove(chatChannelId, hostId);
+    return new ResponseData(
+      true,
+      { message: 'Delete a chat channel by ID successfully' },
+      null,
+    );
   }
 }
