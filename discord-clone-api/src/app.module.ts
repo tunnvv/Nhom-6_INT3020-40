@@ -15,8 +15,8 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      // process.env.DATABASE_URL
-      'mongodb://localhost/discord_clone',
+      process.env.DATABASE_URL
+      // 'mongodb://localhost/discord_clone',
     ),
     AuthModule,
     UsersModule,

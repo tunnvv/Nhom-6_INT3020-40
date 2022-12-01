@@ -1,0 +1,4 @@
+#Fri Sep 23 13:16:42 ICT 2022
+base.0=D\:\\buiva\\Flutter\\Nhom-6_INT3020-40\\week03__flutter_basic_widgets\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

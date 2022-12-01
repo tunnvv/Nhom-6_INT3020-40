@@ -6,7 +6,7 @@ import 'config/config.api.dart';
 
 final _storageBox = Hive.box("storageBox");
 
-Future<Auth> login(String email, String password) async {
+Future<dynamic> login(String email, String password) async {
   final response = await ApiClient()
       .post(API_AUTH_LOGIN, {"email": email, "password": password});
 
@@ -15,6 +15,6 @@ Future<Auth> login(String email, String password) async {
     _storageBox.put("accessToken", auth.accessToken);
     return auth;
   } else {
-    return const Auth();
+    return null;
   }
 }

@@ -31,4 +31,16 @@ class ApiClient {
     return http.post(Uri.parse(DOMAIN_API + path),
         headers: headers, body: jsonEncode(body));
   }
+
+  patch(String path, dynamic body) async {
+    Map<String, String> headers = getHeaderRequest();
+    return http.patch(Uri.parse(DOMAIN_API + path),
+        headers: headers, body: jsonEncode(body));
+  }
+
+  delete(String path, dynamic body) async {
+    Map<String, String> headers = getHeaderRequest();
+    return http.delete(Uri.parse(DOMAIN_API + path),
+        headers: headers, body: jsonEncode(body));
+  }
 }

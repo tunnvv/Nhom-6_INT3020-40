@@ -30,9 +30,9 @@ class _SigninScreenState extends State<SigninScreen> {
       final String email = emailController.text;
       final String password = passwordController.text;
 
-      Auth auth = await login(email, password);
+      dynamic auth = await login(email, password);
 
-      if (auth.accessToken != null) {
+      if (auth is Future<Auth>) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),

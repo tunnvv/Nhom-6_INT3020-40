@@ -1,8 +1,8 @@
 class Auth {
-  final String? accessToken;
+  final String accessToken;
 
   const Auth({
-    this.accessToken,
+    required this.accessToken,
   });
 
   factory Auth.fromJson(Map<String, dynamic> json) {
