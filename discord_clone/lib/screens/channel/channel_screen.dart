@@ -105,11 +105,13 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                   ChannelItemWidget(
                                       key: Key('expansionTitleChannel$index'),
                                       type: ChannelItemType.chat,
-                                      name: "chung"),
+                                      name: "chung",
+                                      index: index),
                                   ChannelItemWidget(
-                                      key: Key('expansionTitleChannel$index'),
+                                      key: Key('expansionTitleCall$index'),
                                       type: ChannelItemType.callVideo,
-                                      name: "Phòng chờ")
+                                      name: "Phòng chờ",
+                                      index: index)
                                 ],
                               );
                             }),

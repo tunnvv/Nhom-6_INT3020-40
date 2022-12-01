@@ -38,6 +38,8 @@ dependencies:
   fluttertoast: ^8.0.8
   flutter_inner_drawer: ^1.0.0+1
   sliding_up_panel: ^2.0.0+1
+  agora_rtc_engine: ^6.0.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   integration_test:

@@ -8,11 +8,13 @@ enum ChannelItemType { callVideo, chat }
 class ChannelItemWidget extends StatelessWidget {
   final ChannelItemType type;
   final String name;
+  final int index;
 
   const ChannelItemWidget({
     Key? key,
     required this.type,
     required this.name,
+    required this.index,
   }) : super(key: key);
 
   @override

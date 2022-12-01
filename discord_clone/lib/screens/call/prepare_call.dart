@@ -3,6 +3,23 @@ import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'dart:math';
+
+import 'package:permission_handler/permission_handler.dart';
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+
+const channelName = ['call0', 'call1', 'call2', 'call3', 'call4', 'call5'];
+const token = [
+  '007eJxTYPi36Z9Li/Wqr8mu0mJf7Jwk+56HX+goqftyYdnWPes6+TcrMKSZGxqnGKQYmJpaWpiYGZpaJCYmGSYaJlmkGRqlJJkZBb3qSG4IZGRYuKWdhZEBAkF8VobkxJwcAwYGABKCIeU=',
+  '007eJxTYKhoXnD7xzyTmfVhC/aIiCzNau04HFjcOvPphWDn2XNkFk9RYEgzNzROMUgxMDW1tDAxMzS1SExMMkw0TLJIMzRKSTIzUs7qSG4IZGRQYpnEwsgAgSA+K0NyYk6OIQMDAKIuHzs=',
+  '007eJxTYJjhwPm2wEXn8eKw2/rS5wMvT9UN+Ns29Z1WSMVGWbPpH/sUGNLMDY1TDFIMTE0tLUzMDE0tEhOTDBMNkyzSDI1SksyMujM7khsCGRnqyiuYGBkgEMRnZUhOzMkxYmAAAF8HH1g=',
+  '007eJxTYFj6tsdVNcOJM9r/73epFN6COVNqtypUf0r8quAfXSxx+pcCQ5q5oXGKQYqBqamlhYmZoalFYmKSYaJhkkWaoVFKkpnRmayO5IZARgbvNQyMjAwQCOKzMiQn5uQYMzAAACvAHo0=',
+  '007eJxTYNDcVfG1vninsOr+wiPMuXeuShYxLLEw37aH//HyZ3v1wzcpMKSZGxqnGKQYmJpaWpiYGZpaJCYmGSYaJlmkGRqlJJkZvcrqSG4IZGRgPviOhZEBAkF8VobkxJwcEwYGAHV+IAM=',
+  '007eJxTYDhs0bv3ulJ9+KT99c1Hr0wySz3aZpU25dPC5kc2P55Pay1QYEgzNzROMUgxMDW1tDAxMzS1SExMMkw0TLJIMzRKSTIzYsvuSG4IZGQ4LubMwAiFID4rQ3JiTo4pAwMAF8YhCQ=='
+];
+Random rand = Random();
+int index = 0;
 
 class PrepareCallScreen extends StatefulWidget {
   const PrepareCallScreen({Key? key}) : super(key: key);
@@ -12,6 +29,10 @@ class PrepareCallScreen extends StatefulWidget {
 }
 
 class _PrepareCallScreenState extends State<PrepareCallScreen> {
+  final _channelName = channelName[index];
+  final _token = token[index];
+  final ClientRoleType _role = ClientRoleType.clientRoleBroadcaster;
+
   @override
   Widget build(BuildContext context) {
     BorderRadiusGeometry radius = const BorderRadius.only(
@@ -142,10 +163,7 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CallScreen()));
+                          onJoin();
                         },
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -174,6 +192,27 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> onJoin() async {
+    await _handleCameraAndMic(Permission.camera);
+    await _handleCameraAndMic(Permission.microphone);
+    // ignore: use_build_context_synchronously
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CallScreen(
+          channelName: _channelName,
+          token: _token,
+          role: _role,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleCameraAndMic(Permission permission) async {
+    await permission.request();
+    // log(status.toString());
   }
 }
 
