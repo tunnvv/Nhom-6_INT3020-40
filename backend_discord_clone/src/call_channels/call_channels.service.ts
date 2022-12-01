@@ -1,30 +1,46 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CallChannel, CallChannelDocument } from 'src/schemas/call_channels.schema';
-import { CreateCallChannelDto } from './dto/create-call_channel.dto';
-import { UpdateCallChannelDto } from './dto/update-call_channel.dto';
+
+import { CreateCallChannelDto, UpdateCallChannelDto } from './dto';
+import { CallChannel, CallChannelDocument } from './schemas';
 
 @Injectable()
 export class CallChannelsService {
+  constructor(
+    @InjectModel(CallChannel.name)
+    private callChannelModel: Model<CallChannelDocument>,
+  ) {}
 
-  constructor(@InjectModel(CallChannel.name) private callChannelModel: Model<CallChannelDocument>) {}
+  async createCallChannel(
+    createCallChannelDto: CreateCallChannelDto,
+  ): Promise<CallChannel> {
+    const callChannel = new this.callChannelModel(createCallChannelDto);
 
-  async create(createCallChannelDto: CreateCallChannelDto): Promise<CallChannel> {
-    const user = new this.callChannelModel(createCallChannelDto);
-    return user.save();
+    // store start pepple is the first member
+    callChannel.members.push(createCallChannelDto.creatorId);
+
+    return callChannel.save();
   }
 
   async findAll(): Promise<any> {
-    const call_channels = await this.callChannelModel.find().exec();
-    if (!call_channels || !call_channels[0]) {
+    const call_channels = await this.callChannelModel
+      .find()
+      .populate('members', ['_uid', 'name', 'avatar'])
+      .exec();
+
+    if (!call_channels) {
       throw new HttpException('Not Found', 404);
     }
     return call_channels;
   }
 
   async findOne(id: string) {
-    const user = await this.callChannelModel.findOne({id}).exec();
+    const user = await this.callChannelModel
+      .findOne({ id })
+      .populate('members', ['_uid', 'name', 'avatar'])
+      .exec();
+
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
@@ -32,11 +48,20 @@ export class CallChannelsService {
   }
 
   async update(id: string, updateCallChannelDto: UpdateCallChannelDto) {
-    return `This action updates a #${id} user`;
+    const cc = this.callChannelModel.findOne({ _id: id });
+
+    // add people to call channel
+    if (updateCallChannelDto.members) {
+      updateCallChannelDto.members = updateCallChannelDto.members.concat(
+        (await cc).members,
+      );
+    }
+
+    return this.callChannelModel.updateOne({ _id: id }, updateCallChannelDto);
   }
 
   async remove(id: string) {
-    const user = await this.callChannelModel.deleteOne({id}).exec();
+    const user = await this.callChannelModel.deleteOne({ id }).exec();
     if (user.deletedCount === 0) {
       throw new HttpException('Not Found', 404);
     }

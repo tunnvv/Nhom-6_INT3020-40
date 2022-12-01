@@ -90,7 +90,6 @@ class TestDiscordClone {
       const key = Key('expansionTileChannel5');
       final chatChannel = find.byKey(key);
 
-      // final chatChannel = find.widgetWithText(ChannelItemWidget, 'Phòng chờ');
       await tester.tap(chatChannel);
       await tester.pumpAndSettle();
       expect(find.byType(ChatScreen), findsOneWidget);
@@ -124,12 +123,12 @@ class TestDiscordClone {
       expect(find.byType(PrepareCallScreen), findsOneWidget);
       expect(find.text('Chưa có ai ở đây cả'), findsOneWidget);
 
-      // final gobackButton =
-      //     find.widgetWithIcon(ElevatedButton, Icons.expand_more);
-      // await tester.tap(gobackButton);
-      // await tester.pumpAndSettle();
-      // expect(find.byType(ChannelScreen), findsOneWidget);
-      // expect(find.text('J2Team'), findsOneWidget);
+      final gobackButton =
+          find.widgetWithIcon(ElevatedButton, Icons.expand_more);
+      await tester.tap(gobackButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChannelScreen), findsOneWidget);
+      expect(find.text('J2Team'), findsOneWidget);
     });
 
     testWidgets('call button in prepare call screen test',

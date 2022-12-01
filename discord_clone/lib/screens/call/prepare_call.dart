@@ -1,4 +1,5 @@
 import 'package:discord_clone/screens/call/call_screen.dart';
+import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -23,7 +24,9 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         leading: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop(ChannelScreenPageRoute());
+          },
           style: ElevatedButton.styleFrom(
               backgroundColor: kSigninBntColor, shape: const CircleBorder()),
           child: const Icon(
@@ -145,6 +148,8 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
                                   builder: (context) => const CallScreen()));
                         },
                         style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
                             backgroundColor: Colors.green),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,6 +173,25 @@ class _PrepareCallScreenState extends State<PrepareCallScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ChannelScreenPageRoute extends PageRouteBuilder {
+  ChannelScreenPageRoute()
+      : super(
+            pageBuilder: (BuildContext context, Animation<double> animation,
+                    Animation<double> secondaryAnimation) =>
+                const PrepareCallScreen());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return SlideTransition(
+      position:
+          Tween<Offset>(begin: const Offset(.0, .0), end: const Offset(0, 1))
+              .animate(controller!),
+      child: const ChannelScreen(),
     );
   }
 }
