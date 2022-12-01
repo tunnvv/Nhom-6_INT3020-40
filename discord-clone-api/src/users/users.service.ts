@@ -113,7 +113,7 @@ export class UsersService {
           'avatar',
           'wallpaper',
           'bio',
-          'createAt',
+          'createdAt',
           'status',
         ])
         .populate('servers')

@@ -25,7 +25,7 @@ export class ShortUserInfo {
   bio: string;
 }
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
