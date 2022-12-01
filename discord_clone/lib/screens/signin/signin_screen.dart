@@ -1,5 +1,8 @@
+import 'package:discord_clone/helpers/api/auth.api.dart';
+import 'package:discord_clone/models/user.model.dart';
+import 'package:discord_clone/models/auth.model.dart';
 import 'package:discord_clone/screens/home/home_screen.dart';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -11,15 +14,31 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _obscureText = true;
 
   @override
   void dispose() {
     super.dispose();
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
+  }
+
+  Future<void> handleLogin(BuildContext context) async {
+    {
+      final String email = emailController.text;
+      final String password = passwordController.text;
+
+      Auth auth = await login(email, password);
+
+      if (auth.accessToken != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
+    }
   }
 
   @override
@@ -96,12 +115,12 @@ class _SigninScreenState extends State<SigninScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: TextField(
-                      controller: usernameController,
+                      controller: emailController,
                       autofocus: true,
                       cursorColor: cursorColor,
                       style: const TextStyle(color: whiteColor),
                       decoration: InputDecoration(
-                        hintText: "Email hoặc Số Điện Thoại",
+                        hintText: "Email",
                         hintStyle: const TextStyle(color: signinSecondaryColor),
                         filled: true,
                         fillColor: signinTextFieldBackgroundColor,
@@ -187,16 +206,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           borderRadius: BorderRadius.circular(4)),
                     ),
                     onPressed: () {
-                      final String username = usernameController.text;
-                      final String password = passwordController.text;
-
-                      if (username == "admin" && password == "1234") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
-                      }
+                      handleLogin(context);
                     },
                     child: const Text(
                       'Đăng nhập',

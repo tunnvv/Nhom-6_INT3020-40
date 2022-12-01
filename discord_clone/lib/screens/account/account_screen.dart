@@ -1,4 +1,4 @@
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 import 'package:discord_clone/widgets/account_item.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

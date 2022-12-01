@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 import 'package:discord_clone/widgets/chat_item.dart';
 import 'package:flutter/material.dart';
-import '../../utils/overlapping_panels.dart';
+import '../../helpers/overlapping_panels.dart';
 
 class Chat {
   final String avatar;

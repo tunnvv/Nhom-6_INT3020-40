@@ -1,5 +1,5 @@
 import 'package:discord_clone/screens/icons/my_flutter_app_icons.dart';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 import "package:flutter/material.dart";
 
 class FriendItemWidget extends StatefulWidget {

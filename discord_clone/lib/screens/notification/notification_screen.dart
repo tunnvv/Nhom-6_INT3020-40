@@ -1,6 +1,6 @@
 import 'package:discord_clone/widgets/notification_item.dart';
 import 'package:flutter/material.dart';
-import '../../utils/colors.dart';
+import '../../helpers/constains/colors.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

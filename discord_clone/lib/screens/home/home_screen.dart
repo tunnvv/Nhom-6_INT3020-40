@@ -3,8 +3,8 @@ import 'package:discord_clone/screens/channel/channel_screen.dart';
 import 'package:discord_clone/screens/chat/chat_screen.dart';
 import 'package:discord_clone/screens/friend/friend_screen.dart';
 import 'package:discord_clone/screens/notification/notification_screen.dart';
-import 'package:discord_clone/utils/colors.dart';
-import 'package:discord_clone/utils/overlapping_panels.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
+import 'package:discord_clone/helpers/overlapping_panels.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

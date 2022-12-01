@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:discord_clone/screens/icons/my_flutter_app_icons.dart';
 import 'package:discord_clone/widgets/friend_item.dart';
 import 'package:flutter/material.dart';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 
 class FriendScreen extends StatefulWidget {
   const FriendScreen({super.key});

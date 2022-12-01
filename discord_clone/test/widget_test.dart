@@ -5,7 +5,7 @@ import 'package:discord_clone/screens/home/home_screen.dart';
 import 'package:discord_clone/screens/signin/signin_screen.dart';
 import 'package:discord_clone/screens/welcome/welcome_screen.dart';
 import 'package:discord_clone/screens/channel/channel_screen.dart';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

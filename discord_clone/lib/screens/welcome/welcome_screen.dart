@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:discord_clone/screens/signin/signin_screen.dart';
-import 'package:discord_clone/utils/colors.dart';
+import 'package:discord_clone/helpers/constains/colors.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -32,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(
                         color: whiteColor,
                         fontSize: 26,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(
