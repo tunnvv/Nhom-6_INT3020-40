@@ -1,20 +1,22 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { gen_user_id } from 'src/utils/func.backup';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User, UserDocument } from 'src/users/schemas';
 import { AuthUserDto } from './dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private jwtService: JwtService,
+    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async signJwtToken(
+  private async signJwtToken(
     _id: string,
     email: string,
   ): Promise<{ accessToken: string }> {
@@ -33,53 +35,35 @@ export class AuthService {
     };
   }
 
-  async login(authUserDto: AuthUserDto): Promise<Object> {
-    const user = await this.userModel
-      .findOne({ email: authUserDto.email })
-      .lean();
-
-    if (!user) {
-      throw new ForbiddenException('User with this email does not exist');
-    }
-
-    const matchedPassword = await bcrypt.compare(
-      authUserDto.password,
-      user.hashedPassword,
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
+    const isPasswordMatching = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
     );
-
-    if (!matchedPassword) {
-      throw new ForbiddenException('Password does not match');
+    if (!isPasswordMatching) {
+      throw new HttpException(
+        'Wrong credentials provided',
+        HttpStatus.BAD_REQUEST,
+      );
     }
+  }
 
-    return this.signJwtToken(user._id, user.email);
+  async login(authUserDto: AuthUserDto): Promise<Object> {
+    try {
+      const user = await this.userService.findByEmail(authUserDto.email);
+      await this.verifyPassword(authUserDto.password, user.hashedPassword);
+      delete user.hashedPassword;
+      return this.signJwtToken(user._id.toString(), user.email);
+    } catch (err) {
+      throw new ForbiddenException('Wrong credentials provided');
+    }
   }
 
   async register(authUserDto: AuthUserDto): Promise<Object> {
-    try {
-      const user = new this.userModel(authUserDto);
-
-      // gen and store hashedPassword
-      const satlOrRounds = 10;
-      user.hashedPassword = await bcrypt.hash(
-        authUserDto.password,
-        satlOrRounds,
-      );
-
-      // create new uid
-      let uid = gen_user_id(user.name);
-      // if duplication, create new uid
-      while (await this.userModel.findOne({ _uid: uid })) {
-        uid = gen_user_id(user.name);
-      }
-      user._uid = uid;
-
-      await user.save();
-
-      return this.signJwtToken(user._id, user.email);
-    } catch (err) {
-      if (err.code == 11000) {
-        throw new ForbiddenException('User with this email already exists');
-      } else throw err.code;
-    }
+    const user = await this.userService.create(authUserDto);
+    return this.signJwtToken(user._id.toString(), user.email);
   }
 }

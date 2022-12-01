@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude, Transform, Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import mongoose, { Document, ObjectId } from 'mongoose';
 
 import {} from '@nestjs/common';
@@ -34,7 +34,7 @@ export class User {
   _uid: string; // nguyenvantu#1234
 
   @ApiProperty({ required: true })
-  @Prop({ default: 'nonome' })
+  @Prop({ default: 'noname' })
   @IsString()
   @MinLength(4)
   @MaxLength(20)

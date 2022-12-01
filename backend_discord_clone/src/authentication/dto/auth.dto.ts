@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class AuthUserDto {
-  @ApiProperty({ required: true, default: 'xxxxxxxxxx.com' })
+  @ApiProperty({ required: true, default: 'tunv.todo@gmail.com' })
   @Prop({ required: true })
   @IsEmail()
   @IsNotEmpty()

@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { gen_user_id } from 'src/utils/func.backup';
 import { JwtService } from '@nestjs/jwt';
 import { ShortUserInfo, User, UserDocument } from './schemas';
+import { AuthUserDto } from 'src/authentication/dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +14,59 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
   ) {}
+
+  async create(authUserDto: AuthUserDto): Promise<User> {
+    try {
+      const user = await new this.userModel(authUserDto);
+
+      // Gen and store hashedPassword
+      const satlOrRounds = 10;
+      user.hashedPassword = await bcrypt.hash(
+        authUserDto.password,
+        satlOrRounds,
+      );
+
+      // Create uid use default name
+      let uid = gen_user_id(user.name);
+      // If duplicated, create new uid
+      while (await this.userModel.findOne({ _uid: uid })) {
+        uid = gen_user_id(user.name);
+      }
+      user._uid = uid;
+
+      await user.save();
+
+      return user;
+    } catch (err) {
+      if (err.code == 11000) {
+        throw new ForbiddenException('User with this email already exists');
+      }
+      throw new HttpException('Something went wrong', err);
+    }
+  }
+
+  async findByObjID(id: string): Promise<ShortUserInfo> {
+    const user = await this.userModel.findOne({ _id: id }).lean().exec();
+    return {
+      _id: user._id,
+      _uid: user._uid,
+      name: user.name,
+      avatar: user.avatar,
+      status: user.status,
+      bio: user.bio,
+      wallpaper: user.wallpaper,
+    };
+  }
+
+  async findByNameID(uid: string): Promise<User> {
+    const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne({ email: email }).lean().exec();
+    return user;
+  }
 
   async findAll(name?: string): Promise<User[]> {
     const users = await this.userModel
@@ -26,25 +81,7 @@ export class UsersService {
     return users;
   }
 
-  async findUserByObjID(id: string): Promise<ShortUserInfo> {
-    const user = await this.userModel.findOne({ _id: id }).lean().exec();
-    return {
-      _id: user._id,
-      _uid: user._uid,
-      name: user.name,
-      avatar: user.avatar,
-      status: user.status,
-      bio: user.bio,
-      wallpaper: user.wallpaper,
-    };
-  }
-
-  async findUserByNameID(uid: string): Promise<User> {
-    const user = await this.userModel.findOne({ uid: uid }).lean().exec();
-    return user;
-  }
-
-  async getFullUserInfoById(_id: string): Promise<User> {
+  async getMe(_id: string): Promise<User> {
     const user = await this.userModel
       .findOne({ _id })
       .lean()
@@ -87,9 +124,9 @@ export class UsersService {
     return this.userModel.updateOne({ _id }, updateUserDto);
   }
 
-  async updateFriendListById(_id: string, friend: string) {
+  async updateFriendListById(_id: string, friend_id: string) {
     const user = await this.userModel.findOne({ _id }).lean().exec();
-    let newFriends = [friend].concat(user.friends);
+    let newFriends = [friend_id].concat(user.friends);
     const tmp = [];
     newFriends = newFriends.reduce((friendListNotDuplicate, element) => {
       if (!tmp.includes(element.toString())) {

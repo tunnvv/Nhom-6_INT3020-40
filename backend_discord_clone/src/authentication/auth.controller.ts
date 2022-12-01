@@ -8,28 +8,28 @@ import {
 import { AuthService } from './auth.service';
 import { AuthUserDto } from './dto';
 
-@ApiTags('Đăng nhập')
-@Controller('auth')
+@ApiTags('Sign up/Login')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({
-    summary: 'Đăng nhập',
-    description: 'Đăng nhập',
+    summary: 'Login',
+    description: 'Enter your email address and password',
   })
-  @ApiOkResponse({ description: 'Đăng nhập thành công' })
-  @ApiBadRequestResponse({ description: 'Đăng nhập thất bại' })
+  @ApiOkResponse({ description: 'Logged in successfully' })
+  @ApiBadRequestResponse({ description: 'Failed to log in' })
   @Post('login')
   async login(@Body() authUserDto: AuthUserDto) {
     return this.authService.login(authUserDto);
   }
 
   @ApiOperation({
-    summary: 'Đăng ký',
-    description: 'Đăng ký',
+    summary: 'Sign up',
+    description: 'Sign up',
   })
-  @ApiOkResponse({ description: 'Đăng ký thành công' })
-  @ApiBadRequestResponse({ description: 'Đăng ký thất bại' })
+  @ApiOkResponse({ description: 'Enter your email adress and new password' })
+  @ApiBadRequestResponse({ description: 'Failed to sign up' })
   @Post('register')
   async register(@Body() authUserDto: AuthUserDto) {
     return this.authService.register(authUserDto);
