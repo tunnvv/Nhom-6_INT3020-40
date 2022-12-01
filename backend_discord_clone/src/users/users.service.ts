@@ -46,26 +46,47 @@ export class UsersService {
   }
 
   async findByObjID(id: string): Promise<ShortUserInfo> {
-    const user = await this.userModel.findOne({ _id: id }).lean().exec();
-    return {
-      _id: user._id,
-      _uid: user._uid,
-      name: user.name,
-      avatar: user.avatar,
-      status: user.status,
-      bio: user.bio,
-      wallpaper: user.wallpaper,
-    };
+    try {
+      const user = await this.userModel.findOne({ _id: id }).lean().exec();
+      return {
+        _id: user._id,
+        _uid: user._uid,
+        name: user.name,
+        avatar: user.avatar,
+        status: user.status,
+        bio: user.bio,
+        wallpaper: user.wallpaper,
+      };
+    } catch (err) {
+      if (err.code == 404) {
+        throw new ForbiddenException('User not found');
+      }
+      throw new HttpException('Something went wrong', err);
+    }
   }
 
   async findByNameID(uid: string): Promise<User> {
-    const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
-    return user;
+    try {
+      const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
+      return user;
+    } catch (err) {
+      if (err.code == 404) {
+        throw new ForbiddenException('User not found');
+      }
+      throw new HttpException('Something went wrong', err);
+    }
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.userModel.findOne({ email: email }).lean().exec();
-    return user;
+    try {
+      const user = await this.userModel.findOne({ email: email }).lean().exec();
+      return user;
+    } catch (err) {
+      if (err.code == 404) {
+        throw new ForbiddenException('User not found');
+      }
+      throw new HttpException('Something went wrong', err);
+    }
   }
 
   async findAll(name?: string): Promise<User[]> {
@@ -82,46 +103,39 @@ export class UsersService {
   }
 
   async getMe(_id: string): Promise<User> {
-    const user = await this.userModel
-      .findOne({ _id })
-      .lean()
-      .populate('friends', ['_id', '_uid', 'avatar', 'wallpaper', 'bio'])
-      .populate('servers')
-      .exec();
+    try {
+      const user = await this.userModel
+        .findOne({ _id })
+        .lean()
+        .populate('friends', ['_id', '_uid', 'avatar', 'wallpaper', 'bio'])
+        .populate('servers')
+        .exec();
 
-    return user;
+      return user;
+    } catch (err) {
+      throw new HttpException('Something went wrong', err);
+    }
   }
 
   async update(_id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userModel.findOne({ _id }).lean().exec();
+    try {
+      const user = await this.userModel.findOne({ _id }).lean().exec();
 
-    // if name changed, must change _uid
-    if (updateUserDto.name) {
-      // create new uid
-      let uid = gen_user_id(updateUserDto.name);
-      // if duplication, create new uid
-      while (await this.userModel.findOne({ _uid: uid })) {
-        uid = gen_user_id(updateUserDto.name);
+      // If name changed, must change _uid
+      if (updateUserDto.name) {
+        // Create new uid
+        let uid = gen_user_id(updateUserDto.name);
+        // If duplication, create new uid
+        while (await this.userModel.findOne({ _uid: uid })) {
+          uid = gen_user_id(updateUserDto.name);
+        }
+        updateUserDto._uid = uid;
       }
-      updateUserDto._uid = uid;
-    }
 
-    // add new friend
-    if (updateUserDto.friends) {
-      updateUserDto.friends = updateUserDto.friends.concat(
-        (await user).friends,
-      );
-      updateUserDto.friends = [...new Set(updateUserDto.friends)];
+      return this.userModel.updateOne({ _id }, updateUserDto);
+    } catch (err) {
+      throw new HttpException('Something went wrong', err);
     }
-
-    // add new server
-    if (updateUserDto.servers) {
-      updateUserDto.servers = updateUserDto.servers.concat(
-        (await user).servers,
-      );
-    }
-
-    return this.userModel.updateOne({ _id }, updateUserDto);
   }
 
   async updateFriendListById(_id: string, friend_id: string) {

@@ -1,34 +1,22 @@
 import { PartialType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-    // @ApiProperty({required: false, nullable: true})
-    // name?: string | null;
+export class UpdateUserDto {
+  _uid?: string;
 
-    // @ApiProperty({required: false})
-    // email?: string;
+  @ApiProperty({ required: false })
+  name?: string;
 
-    // @ApiProperty({required: false})
-    // pwd?: string;
+  @ApiProperty({ default: null, required: false })
+  status?: string;
 
-    // @ApiProperty({required: false})
-    // phone?: string;
-    
-    // @ApiProperty({required: false})
-    // status?: string;
+  @ApiProperty({ default: 'wallpaper', required: false })
+  wallpaper?: string;
 
-    // @ApiProperty({required: false})
-    // wallpaper?: string;
+  @ApiProperty({ default: 'avatar', required: false })
+  avatar?: string;
 
-    // @ApiProperty({required: false})
-    // avatar?: string;
-
-    // @ApiProperty({required: false})
-    // bio?: string;
-
-    // @ApiProperty({required: false})
-    // servers?: [];
-
-    // @ApiProperty({required: false})
-    // friends?: [];
+  @ApiProperty({ default: 'bio', required: false })
+  bio?: string;
 }

@@ -33,48 +33,39 @@ export class User {
   @Prop({ unique: true })
   _uid: string; // nguyenvantu#1234
 
-  @ApiProperty({ required: true })
   @Prop({ default: 'noname' })
   @IsString()
   @MinLength(4)
   @MaxLength(20)
   name: string;
 
-  @ApiProperty({ required: true })
   @Prop({ unique: true, required: true })
   @IsEmail()
   @IsString()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ required: false })
   @Prop({ required: false })
   hashedPassword?: string;
 
-  @ApiProperty({ required: false })
   @Prop({ default: 'Online' })
   status: 'Online' | 'Offline';
 
-  @ApiProperty({ required: false })
   @Prop({ default: 'link image' })
   wallpaper: string;
 
-  @ApiProperty({ required: false })
   @Prop({ default: 'link image' })
   avatar: string;
 
-  @ApiProperty({ required: false })
   @Prop({ default: '' })
   bio: string;
 
-  @ApiProperty({ required: false })
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Server' }],
   })
   @Type(() => Server)
   servers?: string[] = [];
 
-  @ApiProperty({ required: false })
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   })

@@ -6,7 +6,6 @@ import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  // xac dinh model nao duoc dang ky
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],

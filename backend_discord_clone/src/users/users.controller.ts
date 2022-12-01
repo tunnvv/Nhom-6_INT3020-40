@@ -27,23 +27,23 @@ import { ShortUserInfo } from './schemas';
 
 import ResponseData from 'src/utils/response-data';
 
-@ApiTags('Người dùng')
+@ApiTags('User')
 @ApiBearerAuth()
-@ApiForbiddenResponse({ description: 'Không có quyền truy cập' })
+@ApiForbiddenResponse({ description: 'Permission denied' })
 @UseGuards(AuthGuard('jwt'))
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({
-    summary: 'Lấy toàn bộ thông tin người dùng đang đăng nhập',
-    description: 'Lấy toàn bộ thông tin người dùng đang đăng nhập',
+    summary: 'Retrieve all the information of the logged in user',
+    description: 'Retrieve all the information of the logged in user',
   })
   @ApiOkResponse({
-    description: 'Lấy toàn bộ thông tin người dùng đang đăng nhập thành công',
+    description: 'Retrieve all your information successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Lấy toàn bộ thông tin người dùng đang đăng nhập thất bại',
+    description: 'Retrieval of all your information failed',
   })
   @Get('me')
   async me(@Req() request) {
@@ -54,16 +54,15 @@ export class UsersController {
   }
 
   @ApiOperation({
-    summary: 'Lấy một phần thông tin người dùng',
-    description: 'Lấy một phần thông tin người dùng',
+    summary: 'Retrieve all public information of users by ID',
+    description: 'Retrieve all public information of users by ID',
   })
   @ApiOkResponse({
-    description: 'Lấy một phần thông tin người dùng thành công',
+    description: 'Retrieve all public information of users by ID successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Lấy một phần thông tin người dùng thất bại',
+    description: 'Retrieve all public information of users by ID failed',
   })
-  @ApiNotFoundResponse({ description: "The user's id doesn't exist" })
   @Get('u/:id')
   async getUserbyObjId(@Param('id') id: string): Promise<ShortUserInfo> {
     const user = await this.usersService.findByObjID(id);
@@ -74,14 +73,14 @@ export class UsersController {
   }
 
   @ApiOperation({
-    summary: 'Cập nhật thông tin người dùng đang đăng nhập',
-    description: 'Cập nhật thông tin người dùng đang đăng nhập',
+    summary: 'Update logged in user information',
+    description: 'Update logged in user information',
   })
   @ApiOkResponse({
-    description: 'Cập nhật thông tin người dùng đang đăng nhập thành công',
+    description: 'Update logged in user information successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Cập nhật thông tin người dùng đang đăng nhập thất bại',
+    description: 'Update logged in user information failed',
   })
   @Patch('me')
   async update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
@@ -89,21 +88,21 @@ export class UsersController {
     await this.usersService.update(_id, updateUserDto);
     return new ResponseData(
       true,
-      { message: 'Cập nhật thông tin người dùng đang đăng nhập thành công' },
+      { message: 'Successfully updated information' },
       null,
     );
   }
 
   @ApiOperation({
-    summary: 'Thêm id vào danh sách bạn bè của user ngược lại',
+    summary: 'Add friends for both parties',
     description:
-      'Thêm id vào danh sách bạn bè của user và thêm user vào danh sách bạn bè của id',
+      "The recipient presses accept the invitation, using the link as the sender's id",
   })
   @ApiOkResponse({
-    description: 'Cập nhật danh sách bạn bè của cả 2 thành công',
+    description: 'Updating the friends list of both failed',
   })
   @ApiBadRequestResponse({
-    description: 'Cập nhật danh sách bạn bè của cả 2 thất bại',
+    description: 'Updating the friends list of both failed',
   })
   @Patch('friends/update-both/:id')
   async updateFriendList(@Param('id') sender: string, @Req() request) {
@@ -111,6 +110,6 @@ export class UsersController {
     await this.usersService.updateFriendListById(_id, sender);
     await this.usersService.updateFriendListById(sender, _id);
 
-    return new ResponseData(true, { message: 'Các bạn đã là bạn bè' }, null);
+    return new ResponseData(true, { message: 'You guys were friends' }, null);
   }
 }
