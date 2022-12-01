@@ -51,14 +51,14 @@ export class MessagesController {
   }
 
   @ApiOperation({
-    summary: 'The owner edits and updates the message content',
-    description: 'The owner edits and updates the message content follow ID',
+    summary: 'Owner updates the message content by ID',
+    description: 'Owner updates the message content by ID',
   })
   @ApiOkResponse({
-    description: 'Update message content successfully',
+    description: 'Owner update message content successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Update message content failed',
+    description: 'Owner update message content failed',
   })
   @Patch('messages/:id')
   async updateContentMessage(
@@ -77,14 +77,14 @@ export class MessagesController {
   }
 
   @ApiOperation({
-    summary: 'Owner deletes messages by ID',
-    description: 'Owner deletes messages by ID',
+    summary: 'Owner deletes a message by ID',
+    description: 'Owner deletes a message by ID',
   })
   @ApiOkResponse({
-    description: 'Owner deletes messages by ID succefully',
+    description: 'Owner deletes a message by ID succefully',
   })
   @ApiBadRequestResponse({
-    description: 'Owner deletes messages by ID failed',
+    description: 'Owner deletes a message by ID failed',
   })
   @Delete('messages/:id')
   async remove(@Param('id') mesId: string, @Req() req) {
