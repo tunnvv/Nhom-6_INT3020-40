@@ -13,6 +13,7 @@ async function bootstrap() {
     .setDescription('The discord clone API description.')
     .setVersion('1.0')
     .addTag('')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

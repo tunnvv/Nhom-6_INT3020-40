@@ -8,8 +8,7 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
+
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -19,8 +18,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+
 import { AuthGuard } from '@nestjs/passport';
+
+import { UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { ShortUserInfo } from './schemas';
+
 import ResponseData from 'src/utils/response-data';
 
 @ApiTags('Người dùng')
@@ -43,10 +47,10 @@ export class UsersController {
   })
   @Get('me')
   async me(@Req() request) {
-    const _id = request.user;
-    const user = await this.usersService.getFullUserInfoById(_id);
-    const { hashedPassword, ...userWithoutPassWord } = user;
-    return userWithoutPassWord;
+    const { _id } = request.user;
+    const user = await this.usersService.getMe(_id);
+    const { hashedPassword, ...userInfo } = user;
+    return userInfo;
   }
 
   @ApiOperation({
@@ -62,7 +66,7 @@ export class UsersController {
   @ApiNotFoundResponse({ description: "The user's id doesn't exist" })
   @Get('u/:id')
   async getUserbyObjId(@Param('id') id: string): Promise<ShortUserInfo> {
-    const user = await this.usersService.findUserByObjID(id);
+    const user = await this.usersService.findByObjID(id);
     if (!user) {
       throw new NotFoundException("The user's id doesn't exist");
     }
@@ -81,7 +85,7 @@ export class UsersController {
   })
   @Patch('me')
   async update(@Req() request, @Body() updateUserDto: UpdateUserDto) {
-    const _id = request.user;
+    const { _id } = request.user;
     await this.usersService.update(_id, updateUserDto);
     return new ResponseData(
       true,
@@ -103,9 +107,9 @@ export class UsersController {
   })
   @Patch('friends/update-both/:id')
   async updateFriendList(@Param('id') sender: string, @Req() request) {
-    const receiver = request.user;
-    await this.usersService.updateFriendListById(receiver, sender);
-    await this.usersService.updateFriendListById(sender, receiver);
+    const { _id } = request.user;
+    await this.usersService.updateFriendListById(_id, sender);
+    await this.usersService.updateFriendListById(sender, _id);
 
     return new ResponseData(true, { message: 'Các bạn đã là bạn bè' }, null);
   }
