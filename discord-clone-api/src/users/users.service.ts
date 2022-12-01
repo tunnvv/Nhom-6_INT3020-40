@@ -107,7 +107,15 @@ export class UsersService {
       const user = await this.userModel
         .findOne({ _id })
         .lean()
-        .populate('friends', ['_id', '_uid', 'avatar', 'wallpaper', 'bio'])
+        .populate('friends', [
+          '_id',
+          '_uid',
+          'avatar',
+          'wallpaper',
+          'bio',
+          'createAt',
+          'status',
+        ])
         .populate('servers')
         .exec();
 
@@ -138,9 +146,24 @@ export class UsersService {
     }
   }
 
-  async updateFriendListById(_id: string, friend_id: string) {
+  async updateServerListById(_id: string, serverId: string) {
     const user = await this.userModel.findOne({ _id }).lean().exec();
-    let newFriends = [friend_id].concat(user.friends);
+    let newServers = [serverId].concat(user.servers);
+    const tmp = [];
+    newServers = newServers.reduce((serverListNotDuplicate, element) => {
+      if (!tmp.includes(element.toString())) {
+        serverListNotDuplicate.push(element);
+        tmp.push(element.toString());
+      }
+      return serverListNotDuplicate;
+    }, []);
+
+    return this.userModel.updateOne({ _id }, { servers: newServers });
+  }
+
+  async updateFriendListById(_id: string, friendId: string) {
+    const user = await this.userModel.findOne({ _id }).lean().exec();
+    let newFriends = [friendId].concat(user.friends);
     const tmp = [];
     newFriends = newFriends.reduce((friendListNotDuplicate, element) => {
       if (!tmp.includes(element.toString())) {
