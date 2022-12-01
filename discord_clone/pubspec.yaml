@@ -38,6 +38,8 @@ dependencies:
   fluttertoast: ^8.0.8
   flutter_inner_drawer: ^1.0.0+1
   sliding_up_panel: ^2.0.0+1
+  intl: ^0.17.0
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   integration_test:

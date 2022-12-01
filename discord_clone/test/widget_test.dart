@@ -114,9 +114,10 @@ class TestDiscordClone {
       await tester.tap(channel);
       await tester.pump(const Duration(milliseconds: 1000));
 
-      const key = Key('expansionTileChannel5');
+      const key = Key('expansionTileCall5');
       final callChannel = find.byKey(key);
 
+      // final chatChannel = find.widgetWithText(ChannelItemWidget, 'Phòng chờ');
       await tester.tap(callChannel);
       await tester.pumpAndSettle();
       expect(find.byType(PrepareCallScreen), findsOneWidget);

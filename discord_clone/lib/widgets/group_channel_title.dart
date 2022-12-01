@@ -19,14 +19,14 @@ class GroupChannelTitleWidget extends StatelessWidget {
         splashColor: channelWidgetClickColor,
         highlightColor: channelWidgetClickColor,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          const Icon(Icons.expand_more, size: 16, color: channelIconColor),
+          const Icon(Icons.expand_more, size: 12, color: channelIconColor),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Text(
                 name,
                 style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.w700,
                     color: channelIconColor),
               ),

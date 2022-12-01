@@ -47,7 +47,8 @@ class _FriendScreen extends State<FriendScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: friendHeaderColor,
-          shape: const Border(bottom: BorderSide(color: blackColor, width: 1)),
+          shape: const Border(
+              bottom: BorderSide(color: friendBorderColor, width: 0.5)),
           elevation: 0,
           title: const Text("Bạn bè",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),

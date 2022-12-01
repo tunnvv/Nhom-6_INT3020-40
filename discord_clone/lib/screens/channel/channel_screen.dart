@@ -87,30 +87,37 @@ class _ChannelScreenState extends State<ChannelScreen> {
                       ),
                       Expanded(
                         child: ListView.builder(
-                            itemCount: 6,
+                            itemCount: 2,
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {
-                              return ExpansionTile(
-                                key: Key('expansionTile$index'),
-                                backgroundColor: channelBackgroundColor,
-                                title: const GroupChannelTitleWidget(
-                                    name: "KÊNH CHAT"),
-                                tilePadding:
-                                    const EdgeInsets.symmetric(horizontal: 6),
-                                trailing: const Icon(Icons.add,
-                                    color: channelIconColor),
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                children: <Widget>[
-                                  ChannelItemWidget(
-                                      key: Key('expansionTitleChannel$index'),
-                                      type: ChannelItemType.chat,
-                                      name: "chung"),
-                                  ChannelItemWidget(
-                                      key: Key('expansionTitleChannel$index'),
-                                      type: ChannelItemType.callVideo,
-                                      name: "Phòng chờ")
-                                ],
+                              return Theme(
+                                data: ThemeData()
+                                    .copyWith(dividerColor: Colors.transparent),
+                                child: ExpansionTile(
+                                  backgroundColor: channelBackgroundColor,
+                                  title: const GroupChannelTitleWidget(
+                                      name: "KÊNH CHAT"),
+                                  onExpansionChanged: (value) {},
+                                  tilePadding:
+                                      const EdgeInsets.symmetric(horizontal: 6),
+                                  trailing: const Icon(
+                                    Icons.add,
+                                    color: channelIconColor,
+                                    size: 20,
+                                  ),
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  children: <Widget>[
+                                    ChannelItemWidget(
+                                        key: Key('expansionTileChannel$index'),
+                                        type: ChannelItemType.chat,
+                                        name: "chung"),
+                                    ChannelItemWidget(
+                                        key: Key('expansionTileCall$index'),
+                                        type: ChannelItemType.callVideo,
+                                        name: "Phòng chờ")
+                                  ],
+                                ),
                               );
                             }),
                       ),

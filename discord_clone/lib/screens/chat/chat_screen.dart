@@ -30,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController chatController = TextEditingController();
 
   List<Chat> chatList = (jsonDecode(
-              '[{"name":"John","message":"Hello","avatar":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwCZE-3NGtzDSPHzbwo_9FyPvfkCwAVWbW6Q&usqp=CAU","createdAt":"Hôm nay"},{"name":"John","message":"Hello","avatar":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwCZE-3NGtzDSPHzbwo_9FyPvfkCwAVWbW6Q&usqp=CAU","createdAt":"Hôm nay"}]')
+              '[{"name":"John","message":"Hi","avatar":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwCZE-3NGtzDSPHzbwo_9FyPvfkCwAVWbW6Q&usqp=CAU","createdAt":"2022-10-20T10:10:10Z"},{"name":"John","message":"Hello","avatar":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwCZE-3NGtzDSPHzbwo_9FyPvfkCwAVWbW6Q&usqp=CAU","createdAt":"2022-10-19T10:10:10Z"}]')
           as List)
       .map((item) => Chat.fromJson(item))
       .toList();
@@ -53,12 +53,12 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: statusBarColor,
         appBar: AppBar(
             backgroundColor: chatHeaderColor,
             shape: const Border(
                 bottom: BorderSide(color: chatBorderColor, width: 1)),
             elevation: 0,
-            centerTitle: true,
             leading: IconButton(
               icon: const Icon(Icons.menu, color: chatIconColor),
               onPressed: () {
@@ -69,9 +69,19 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
               },
             ),
-            title: const Text(
-              "#kênh-công-chúa",
-              style: TextStyle(fontSize: 16),
+            title: Row(
+              children: const [
+                Icon(
+                  Icons.tag,
+                  color: chatIconSecondaryColor,
+                  size: 20,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "kênh-công-chúa",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
             actions: <Widget>[
               IconButton(
@@ -86,6 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   color: chatBodyColor,
                   width: screenSize.width,
                   child: ListView.builder(
+                      reverse: true,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 0, vertical: 12),
                       itemCount: chatList.length,
@@ -109,6 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
+                    cursorColor: cursorColor,
                     style: const TextStyle(color: whiteColor),
                     controller: chatController,
                     decoration: InputDecoration(
@@ -135,7 +147,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               "message": chatController.text,
                               "avatar":
                                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwCZE-3NGtzDSPHzbwo_9FyPvfkCwAVWbW6Q&usqp=CAU",
-                              "createdAt": "Hôm nay"
+                              "createdAt": "2022-10-20T10:10:10Z"
                             };
                             chatController.clear();
                             setState(() {
