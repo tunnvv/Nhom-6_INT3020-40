@@ -20,7 +20,7 @@ export class UsersService {
       const user = await new this.userModel(authUserDto);
 
       // Gen and store hashedPassword
-      const satlOrRounds = 10;
+      const satlOrRounds = await bcrypt.genSalt();
       user.hashedPassword = await bcrypt.hash(
         authUserDto.password,
         satlOrRounds,
