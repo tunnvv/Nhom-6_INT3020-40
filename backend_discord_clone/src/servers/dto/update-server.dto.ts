@@ -1,4 +1,12 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateServerDto } from './create-server.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateServerDto extends PartialType(CreateServerDto) {}
+export class UpdateServerDto {
+  @ApiProperty({ required: false })
+  members?: string[];
+
+  @ApiProperty({ required: false })
+  chatChannels?: string[];
+
+  @ApiProperty({ required: false })
+  callChannels?: string[];
+}

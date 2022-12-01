@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { ServersService } from './servers.service';
 import { ServersController } from './servers.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Server, ServerSchema } from 'src/servers/schemas/servers.schema';
+import { Server, ServerSchema } from './schemas';
 
 @Module({
   imports: [
@@ -10,5 +11,6 @@ import { Server, ServerSchema } from 'src/servers/schemas/servers.schema';
   ],
   controllers: [ServersController],
   providers: [ServersService],
+  exports: [ServersService],
 })
 export class ServersModule {}
