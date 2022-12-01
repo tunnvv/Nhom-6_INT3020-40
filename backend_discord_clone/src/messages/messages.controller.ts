@@ -1,55 +1,99 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateMessageDto, UpdateMessageDto } from './dto';
-import { MessagesService } from './messages.service';
 
-@ApiTags('messages')
-@Controller('messages')
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import { AuthGuard } from '@nestjs/passport';
+
+import { MessagesService } from './messages.service';
+import { CreateMessageDto, UpdateMessageDto } from './dto';
+
+import ResponseData from 'src/utils/response-data';
+
+@ApiTags('Messages')
+@ApiBearerAuth()
+@ApiForbiddenResponse({ description: 'Permission denied' })
+@UseGuards(AuthGuard('jwt'))
+@Controller()
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @ApiOkResponse({ description: 'Successfully created message' })
-  @Post()
-  async create(@Body() createMessageDto: CreateMessageDto) {
-    return this.messagesService.create(createMessageDto);
+  @ApiOperation({
+    summary: 'Create a new message',
+    description: 'Create a new message',
+  })
+  @ApiOkResponse({ description: 'Create a new message successfully' })
+  @ApiBadRequestResponse({ description: 'Create a new message failed' })
+  @Post('messages')
+  async createNewMessage(
+    @Req() req,
+    @Body() createMessageDto: CreateMessageDto,
+  ) {
+    const { _id } = req.user;
+    createMessageDto.ownerId = _id;
+    const message = this.messagesService.create(createMessageDto);
+    return message;
   }
 
+  @ApiOperation({
+    summary: 'The owner edits and updates the message content',
+    description: 'The owner edits and updates the message content follow ID',
+  })
   @ApiOkResponse({
-    isArray: true,
-    description: 'Successfully returned all messages',
+    description: 'Update message content successfully',
   })
-  @Get()
-  findAll() {
-    return this.messagesService.findAll();
-  }
-
-  @ApiOkResponse({ description: 'Successfully finded message by Id' })
-  @ApiNotFoundResponse({
-    description: "Can't find. The message's id doesn't exits",
+  @ApiBadRequestResponse({
+    description: 'Update message content failed',
   })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.messagesService.findOneByObjID(id);
+  @Patch('messages/:id')
+  async updateContentMessage(
+    @Param('id') mesId: string,
+    @Req() req,
+    @Body() updateMesageDto: UpdateMessageDto,
+  ) {
+    // get the Id of user who request edit content
+    const { _id } = req.user;
+    await this.messagesService.update(mesId, _id, updateMesageDto);
+    return new ResponseData(
+      true,
+      { message: 'Update message content successfully' },
+      null,
+    );
   }
 
-  @ApiOkResponse({ description: "Successfully updated message's content" })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
-    return this.messagesService.update(id, updateMessageDto);
-  }
-
-  @ApiOkResponse({ description: 'Successfully deleted message' })
-  @ApiNotFoundResponse({ description: "Can't find message to delete" })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.messagesService.remove(id);
+  @ApiOperation({
+    summary: 'Owner deletes messages by ID',
+    description: 'Owner deletes messages by ID',
+  })
+  @ApiOkResponse({
+    description: 'Owner deletes messages by ID succefully',
+  })
+  @ApiBadRequestResponse({
+    description: 'Owner deletes messages by ID failed',
+  })
+  @Delete('messages/:id')
+  async remove(@Param('id') mesId: string, @Req() req) {
+    const { _id } = req.user;
+    await this.messagesService.remove(mesId, _id);
+    return new ResponseData(
+      true,
+      { message: 'Delete message content successfully' },
+      null,
+    );
   }
 }
