@@ -102,6 +102,8 @@ export class UsersService {
     return users;
   }
 
+  // *** Retrieve 1-layer information *** \\
+  // the user who is the server owner will retrieve information of server
   async getMe(_id: string): Promise<User> {
     try {
       const user = await this.userModel
@@ -113,10 +115,42 @@ export class UsersService {
           'avatar',
           'wallpaper',
           'bio',
-          'createdAt',
+          'createAt',
           'status',
         ])
         .populate('servers')
+        .exec();
+
+      return user;
+    } catch (err) {
+      throw new HttpException('Something went wrong', err);
+    }
+  }
+
+  // *** Retrieve 2-layer information *** \\
+  // the user who is the server owner will retrieve more information about
+  // the call channel and chat channel of each server
+  async getMeDeeper(_id: string): Promise<User> {
+    try {
+      const user = await this.userModel
+        .findOne({ _id })
+        .lean()
+        .populate({
+          path: 'friends',
+          populate: [
+            '_id',
+            '_uid',
+            'avatar',
+            'wallpaper',
+            'bio',
+            'createdAt',
+            'status',
+          ],
+        })
+        .populate({
+          path: 'servers',
+          populate: ['chatChannels', 'callChannels'],
+        })
         .exec();
 
       return user;

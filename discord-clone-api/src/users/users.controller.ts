@@ -54,6 +54,26 @@ export class UsersController {
   }
 
   @ApiOperation({
+    summary:
+      'Retrieve all the 2-levels information of the logged in user to manage them servers',
+    description:
+      'Retrieve all the 2-levels information of the logged in user to manage them servers',
+  })
+  @ApiOkResponse({
+    description: 'Retrieve all your 2-levels information successfully',
+  })
+  @ApiBadRequestResponse({
+    description: 'Retrieval of all your 2-levels information failed',
+  })
+  @Get('me/management')
+  async meMore(@Req() request) {
+    const { _id } = request.user;
+    const user = await this.usersService.getMeDeeper(_id);
+    const { hashedPassword, ...userInfo } = user;
+    return userInfo;
+  }
+
+  @ApiOperation({
     summary: 'Retrieve all public information of users by ID',
     description: 'Retrieve all public information of users by ID',
   })
