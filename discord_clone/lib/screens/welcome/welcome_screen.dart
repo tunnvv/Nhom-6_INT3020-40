@@ -67,10 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                     timeInSecForIosWeb: 1,
                   );
                 },
-                child: const Text(
-                  'Đăng ký',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: const Text('Đăng ký'),
               ),
               const SizedBox(
                 height: 6,
@@ -91,10 +88,7 @@ class WelcomeScreen extends StatelessWidget {
                         builder: (context) => const SigninScreen()),
                   );
                 },
-                child: const Text(
-                  'Đăng nhập',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: const Text('Đăng nhập'),
               ),
             ],
           ),

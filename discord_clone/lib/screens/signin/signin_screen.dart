@@ -32,11 +32,11 @@ class _SigninScreenState extends State<SigninScreen> {
 
       dynamic auth = await login(email, password);
 
-      if (auth is Future<Auth>) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+      if (auth != null) {
+        () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
       }
     }
   }

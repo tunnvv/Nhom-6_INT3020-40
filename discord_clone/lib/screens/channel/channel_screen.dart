@@ -1,9 +1,13 @@
+import 'package:discord_clone/helpers/api/servers.api.dart';
 import 'package:discord_clone/helpers/api/users.api.dart';
 import 'package:discord_clone/helpers/constains/colors.dart';
+import 'package:discord_clone/helpers/fake_avatar.dart';
+import 'package:discord_clone/models/api_response.model.dart';
 import 'package:discord_clone/models/user.model.dart';
 import 'package:discord_clone/widgets/channel_item.dart';
 import 'package:discord_clone/widgets/group_channel_title.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ChannelScreen extends StatefulWidget {
   const ChannelScreen({super.key});
@@ -13,15 +17,19 @@ class ChannelScreen extends StatefulWidget {
 }
 
 class _ChannelScreenState extends State<ChannelScreen> {
+  TextEditingController nameController = TextEditingController();
   late Future<User> me;
 
   @override
   void initState() {
     super.initState();
-    dynamic tmp = getMyInfo();
-    if (tmp is Future<User>) {
-      me = tmp;
-    }
+    me = getMyInfo();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
   }
 
   @override
@@ -42,21 +50,24 @@ class _ChannelScreenState extends State<ChannelScreen> {
                     width: 72,
                     child: Column(
                       children: [
+                        const SizedBox(
+                          height: 8,
+                        ),
                         Expanded(
                           child: ListView.builder(
-                              itemCount: snapshot.data.servers.length,
+                              itemCount: snapshot.data!.servers.length + 1,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: index != 10 - 1
+                                  child: index != snapshot.data?.servers.length
                                       ? GestureDetector(
-                                          child: const CircleAvatar(
+                                          child: CircleAvatar(
                                             radius: 24,
                                             backgroundColor:
                                                 channelBackgroundColor,
-                                            backgroundImage: AssetImage(
-                                              "assets/images/avatar.jpg",
+                                            backgroundImage: NetworkImage(
+                                              getAvatar(),
                                             ),
                                           ),
                                         )
@@ -65,7 +76,163 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                           elevation: 0,
                                           shape: const CircleBorder(),
                                           padding: const EdgeInsets.all(12.0),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            showModalBottomSheet<dynamic>(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.6,
+                                                  padding:
+                                                      const EdgeInsets.all(16),
+                                                  decoration: const BoxDecoration(
+                                                      color:
+                                                          bottomSheetBackgroundColor,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(8),
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      8))),
+                                                  child: Column(
+                                                    children: [
+                                                      const Text(
+                                                        "Tạo Máy Chủ Của Bạn",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: whiteColor,
+                                                          fontSize: 26,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
+                                                      const Text(
+                                                        "Máy chủ của bạn là nơi bạn giao lưu với bạn bè của mình. Hãy tạo máy chủ của riêng bạn và bắt đầu trò chuyện.",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          color:
+                                                              welcomeSecondaryColor,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 12,
+                                                      ),
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        child: TextField(
+                                                          controller:
+                                                              nameController,
+                                                          cursorColor:
+                                                              cursorColor,
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  whiteColor),
+                                                          decoration:
+                                                              InputDecoration(
+                                                            hintText:
+                                                                "Nhập Tên Máy Chủ",
+                                                            hintStyle:
+                                                                const TextStyle(
+                                                                    color:
+                                                                        bottomSheetTextSecondaryColor,
+                                                                    fontSize:
+                                                                        14),
+                                                            filled: true,
+                                                            fillColor:
+                                                                bottomSheetBackgroundWidgetColor,
+                                                            contentPadding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        12.0,
+                                                                    vertical:
+                                                                        4.0),
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4),
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                width: 0,
+                                                                style:
+                                                                    BorderStyle
+                                                                        .none,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          minimumSize: const Size
+                                                              .fromHeight(42),
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          backgroundColor:
+                                                              welcomeRegisterButtonColor,
+                                                          elevation: 0,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4)),
+                                                        ),
+                                                        onPressed: () async {
+                                                          final String name =
+                                                              nameController
+                                                                  .text;
+                                                          ApiResponse
+                                                              apiResponse =
+                                                              await createServer(
+                                                                  name);
+
+                                                          if (apiResponse
+                                                              .isSuccess) {
+                                                            () => Navigator.pop(
+                                                                context);
+
+                                                            Fluttertoast
+                                                                .showToast(
+                                                              msg: apiResponse
+                                                                  .payload
+                                                                  .message,
+                                                              toastLength: Toast
+                                                                  .LENGTH_SHORT,
+                                                              timeInSecForIosWeb:
+                                                                  1,
+                                                              backgroundColor:
+                                                                  signinLoginButtonColor,
+                                                              textColor:
+                                                                  whiteColor,
+                                                            );
+                                                          }
+                                                        },
+                                                        child: const Text(
+                                                            'Tạo Máy Chủ'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
                                           child: const Icon(
                                             Icons.add,
                                             color: channelIconAddColor,
@@ -100,6 +267,26 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                     Icons.more_horiz,
                                     color: channelIconColor,
                                   )
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(42),
+                                padding: EdgeInsets.zero,
+                                backgroundColor: welcomeLoginButtonColor,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4)),
+                              ),
+                              onPressed: () {},
+                              child: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.person_add,
+                                    color: channelIconColor,
+                                  ),
+                                  Text('Lời mời'),
                                 ],
                               ),
                             ),
@@ -150,7 +337,10 @@ class _ChannelScreenState extends State<ChannelScreen> {
               return Text('${snapshot.error}');
             }
 
-            return const CircularProgressIndicator();
+            return const Center(
+                child: CircularProgressIndicator(
+              color: welcomeRegisterButtonColor,
+            ));
           },
         ),
       ),

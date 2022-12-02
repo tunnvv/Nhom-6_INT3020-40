@@ -38,8 +38,12 @@ class User {
       wallpaper: json['wallpaper'],
       avatar: json['avatar'],
       bio: json['bio'],
-      friends: json['friends'],
-      servers: json['servers'],
+      friends: (json['friends'] as List)
+          .map((item) => Friend.fromJson(item))
+          .toList(),
+      servers: (json['servers'] as List)
+          .map((item) => Server.fromJson(item))
+          .toList(),
       createdAt: json['createdAt'],
     );
   }

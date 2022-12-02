@@ -39,10 +39,11 @@ export class ServersController {
   @ApiOkResponse({ description: 'Create a new server successfully' })
   @ApiBadRequestResponse({ description: 'Create a new server failed' })
   @Post()
-  create(@Req() req, @Body() createServerDto: CreateServerDto) {
+  async create(@Req() req, @Body() createServerDto: CreateServerDto) {
     const _id = req.user;
     createServerDto.hostId = _id;
-    return this.serversService.create(createServerDto);
+    await this.serversService.create(createServerDto);
+    return new ResponseData(true, { message: 'Tạo máy chủ thành công' }, null);
   }
 
   @ApiOperation({

@@ -31,7 +31,9 @@ class DiscordClone extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: const WelcomeScreen(),
+      home: _storageBox.get("accessToken") != null
+          ? const WelcomeScreen()
+          : const WelcomeScreen(),
     );
   }
 }
