@@ -7,7 +7,8 @@ import { MessagesModule } from './messages/messages.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ServersModule } from './servers/servers.module';
 import { UsersModule } from './users/users.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
       // process.env.DATABASE_URL
       'mongodb://localhost/discord_clone',
     ),
+    ScheduleModule.forRoot(),
     AuthModule,
     UsersModule,
     CallChannelsModule,
@@ -25,6 +27,8 @@ import { ConfigModule } from '@nestjs/config';
     ChatChannelsModule,
     ServersModule,
     NotificationsModule,
+    ConfigModule,
   ],
+  providers: [ConfigService],
 })
 export class AppModule {}
