@@ -8,6 +8,7 @@ import { JwtStratege } from './strategy';
 
 import { UsersService } from 'src/users/users.service';
 import { User, UserSchema } from 'src/users/schemas';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   // xac dinh model nao duoc dang ky
@@ -15,7 +16,13 @@ import { User, UserSchema } from 'src/users/schemas';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [AuthController],
-  providers: [UsersService, AuthService, JwtService, JwtStratege],
+  providers: [
+    UsersService,
+    AuthService,
+    JwtService,
+    JwtStratege,
+    ConfigService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
