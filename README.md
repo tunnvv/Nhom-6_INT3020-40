@@ -65,6 +65,9 @@ Tự học kiến thức về NestJS để làm backend
 ![Monkey 2 Testing Discord](./img/monkey_2.png)
 ![Monkey 3 Testing Discord](./img/monkey_3.png)
 
+- Kết quả Test Coverage
+![Test coverage](./img/test_coverage.png)
+
 - Cải thiện các màn hình giao diện người dùng:
   - Welcome Screen
 
