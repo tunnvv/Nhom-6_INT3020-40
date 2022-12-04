@@ -14,19 +14,21 @@ export class ChatChannelsService {
   ) {}
 
   async create(createChatChannelDto: CreateChatChannelDto) {
+    // only host can find this's server_id
     const { hostId, serverId } = createChatChannelDto;
     const server = await this.serversService.findOne(serverId, hostId);
-
     if (!server) {
       return null;
     }
 
+    // create a new channel
     const chatChannel = new this.chatChannelModel(createChatChannelDto);
     chatChannel.members.push(hostId);
     await chatChannel.save();
 
+    // finded server will add this's new channel to list
     const newChatChannelList = [chatChannel._id].concat(server.chatChannels);
-    return this.serversService.updateFromChannel(serverId, {
+    return this.serversService.updateChannelList(serverId, {
       chatChannels: newChatChannelList,
     });
   }

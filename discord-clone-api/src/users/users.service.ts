@@ -188,8 +188,13 @@ export class UsersService {
     }
   }
 
-  async updateServerListById(_id: string, serverId: string) {
+  // ADD A NEW FRIEND TO FRIEND LIST
+  // - need to check the servers are not duplicated
+  //      + no check needed when creating server,
+  //      + check when adding server to server list
+  async updateServerList(_id: string, serverId: string) {
     const user = await this.userModel.findOne({ _id }).lean().exec();
+    console.log(user.servers);
     let newServers = [serverId].concat(user.servers);
     const tmp = [];
     newServers = newServers.reduce((serverListNotDuplicate, element) => {
@@ -203,7 +208,10 @@ export class UsersService {
     return this.userModel.updateOne({ _id }, { servers: newServers });
   }
 
-  async updateFriendListById(_id: string, friendId: string) {
+  // ADD A NEW FRIEND TO FRIEND LIST
+  // - need to check the friends are not duplicated
+  //      + check when adding friend to friend list
+  async updateFriendList(_id: string, friendId: string) {
     const user = await this.userModel.findOne({ _id }).lean().exec();
     let newFriends = [friendId].concat(user.friends);
     const tmp = [];
