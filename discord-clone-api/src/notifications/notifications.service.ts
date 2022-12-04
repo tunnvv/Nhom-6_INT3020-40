@@ -33,15 +33,7 @@ export class NotificationsService {
       .populate('chatId', ['name'])
       .populate('callId', ['name'])
       .exec();
-    if (!notifications || !notifications[0]) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'List notifications is empty',
-        },
-        HttpStatus.FORBIDDEN,
-      );
-    }
+
     return notifications;
   }
 

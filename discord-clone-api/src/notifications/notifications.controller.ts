@@ -46,10 +46,21 @@ export class NotificationsController {
   ) {
     const { _id } = req.user;
     createNotificationDto.sender = _id;
-    const notification = await this.notificationsService.create(
-      createNotificationDto,
+    await this.notificationsService.create(createNotificationDto);
+
+    if (createNotificationDto.type == 'FRIEND') {
+      return new ResponseData(
+        true,
+        { message: 'Gửi yêu cầu kết bạn thành công' },
+        null,
+      );
+    }
+
+    return new ResponseData(
+      true,
+      { message: 'Tạo thông báo thành công' },
+      null,
     );
-    return notification;
   }
 
   @ApiOperation({

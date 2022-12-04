@@ -16,8 +16,8 @@ import { ScheduleModule } from '@nestjs/schedule';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      process.env.DATABASE_URL
-      // 'mongodb://localhost/discord_clone',
+      // process.env.DATABASE_URL
+      'mongodb://127.0.0.1/convershark',
     ),
     ScheduleModule.forRoot(),
     AuthModule,
