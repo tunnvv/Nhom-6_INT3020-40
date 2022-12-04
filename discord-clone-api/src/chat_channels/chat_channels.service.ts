@@ -31,6 +31,28 @@ export class ChatChannelsService {
     });
   }
 
+  async findOne(_id: string) {
+    const chatChannel = this.chatChannelModel
+      .findById({ _id })
+      .lean()
+      .populate('members', [
+        '_id',
+        '_uid',
+        'avatar',
+        'wallpaper',
+        'bio',
+        'createAt',
+        'status',
+      ])
+      .populate('messages')
+      .exec();
+
+    if (!chatChannel) {
+      return null;
+    }
+    return chatChannel;
+  }
+
   async update(
     _id: string,
     hostId: string,
