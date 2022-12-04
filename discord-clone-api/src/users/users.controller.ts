@@ -133,8 +133,8 @@ export class UsersController {
     if (!senderId) {
       throw new NotFoundException("The user doesn't exist");
     }
-    await this.usersService.updateFriendListById(_id, senderId);
-    await this.usersService.updateFriendListById(senderId, _id);
+    await this.usersService.updateFriendList(_id, senderId);
+    await this.usersService.updateFriendList(senderId, _id);
 
     return new ResponseData(true, { message: 'You guys were friends' }, null);
   }

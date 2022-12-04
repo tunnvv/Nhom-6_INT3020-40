@@ -67,6 +67,29 @@ export class ServersController {
   }
 
   @ApiOperation({
+    summary: 'From receiver, auto updates list member of server by ID',
+    description: 'From receiver, auto updates list member of server by ID',
+  })
+  @ApiOkResponse({
+    description:
+      'From receiver, auto updates list member of server by ID successfully',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'From receiver, auto updates list member of server by ID failed',
+  })
+  @Patch('member/:id')
+  async addNewMember(@Req() request, @Param('id') id: string) {
+    const { _id: userId } = request.user;
+    await this.serversService.updateMemberList(id, userId);
+    return new ResponseData(
+      true,
+      { message: 'Update list member successfully' },
+      null,
+    );
+  }
+
+  @ApiOperation({
     summary: 'Owner deletes a server by ID',
     description: 'Owner deletes a server by ID',
   })
