@@ -124,11 +124,17 @@ export class UsersController {
   @ApiBadRequestResponse({
     description: 'Updating the friends list of both failed',
   })
-  @Patch('friends/update-both/:id')
-  async updateFriendList(@Param('id') sender: string, @Req() request) {
+  @Patch('friends/update-both/:uid')
+  async updateFriendList(@Param('uid') senderName: string, @Req() request) {
     const { _id } = request.user;
-    await this.usersService.updateFriendListById(_id, sender);
-    await this.usersService.updateFriendListById(sender, _id);
+    const senderId = await (
+      await this.usersService.findByNameID(senderName)
+    )._id.toString();
+    if (!senderId) {
+      throw new NotFoundException("The user doesn't exist");
+    }
+    await this.usersService.updateFriendListById(_id, senderId);
+    await this.usersService.updateFriendListById(senderId, _id);
 
     return new ResponseData(true, { message: 'You guys were friends' }, null);
   }

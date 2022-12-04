@@ -68,6 +68,9 @@ export class UsersService {
   async findByNameID(uid: string): Promise<User> {
     try {
       const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
+      delete user.hashedPassword;
+      delete user.friends;
+      delete user.servers;
       return user;
     } catch (err) {
       if (err.code == 404) {
