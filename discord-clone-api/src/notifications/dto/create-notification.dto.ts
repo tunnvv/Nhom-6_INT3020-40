@@ -8,7 +8,6 @@ import { Server } from 'src/servers/schemas';
 import { User } from 'src/users/schemas';
 
 export class CreateNotificationDto {
-  @ApiProperty({ required: true })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
   @Type(() => User)
   sender: string;
@@ -31,6 +30,9 @@ export class CreateNotificationDto {
   isAccept: boolean;
 
   @ApiProperty({ required: false })
+  friendUID: string;
+
+  @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'Server' })
   @Type(() => Server)
   serverId: string;
@@ -44,8 +46,4 @@ export class CreateNotificationDto {
   @Prop({ type: mongoose.Types.ObjectId, ref: 'CallChannel' })
   @Type(() => CallChannel)
   callId: string;
-
-  @ApiProperty({ required: true })
-  @Prop({ required: true })
-  content: string;
 }

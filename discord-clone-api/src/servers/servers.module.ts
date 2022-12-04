@@ -5,18 +5,16 @@ import { ServersService } from './servers.service';
 import { ServersController } from './servers.controller';
 import { Server, ServerSchema } from './schemas';
 import { UsersService } from 'src/users/users.service';
-import { User, UserSchema } from 'src/users/schemas';
 import { JwtService } from '@nestjs/jwt';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Server.name, schema: ServerSchema },
-      { name: User.name, schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Server.name, schema: ServerSchema }]),
+    UsersModule,
   ],
   controllers: [ServersController],
-  providers: [ServersService, UsersService, JwtService],
+  providers: [ServersService, JwtService],
   exports: [ServersService],
 })
 export class ServersModule {}

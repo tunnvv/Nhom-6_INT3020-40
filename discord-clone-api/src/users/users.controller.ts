@@ -66,7 +66,7 @@ export class UsersController {
     description: 'Retrieval of all your 2-levels information failed',
   })
   @Get('me/management')
-  async meMore(@Req() request) {
+  async meAsHost(@Req() request) {
     const { _id } = request.user;
     const user = await this.usersService.getMeDeeper(_id);
     const { hashedPassword, ...userInfo } = user;
@@ -84,7 +84,7 @@ export class UsersController {
     description: 'Retrieve all public information of users by ID failed',
   })
   @Get('u/:id')
-  async getUserbyObjId(@Param('id') id: string): Promise<ShortUserInfo> {
+  async getByObjId(@Param('id') id: string): Promise<ShortUserInfo> {
     const user = await this.usersService.findByObjID(id);
     if (!user) {
       throw new NotFoundException("The user's id doesn't exist");
@@ -127,8 +127,14 @@ export class UsersController {
   @Patch('friends/update-both/:id')
   async updateFriendList(@Param('id') sender: string, @Req() request) {
     const { _id } = request.user;
-    await this.usersService.updateFriendListById(_id, sender);
-    await this.usersService.updateFriendListById(sender, _id);
+    const senderId = await (
+      await this.usersService.findByObjID(sender)
+    )._id.toString();
+    if (!senderId) {
+      throw new NotFoundException("The user doesn't exist");
+    }
+    await this.usersService.updateFriendListById(_id, senderId);
+    await this.usersService.updateFriendListById(senderId, _id);
 
     return new ResponseData(true, { message: 'You guys were friends' }, null);
   }

@@ -7,6 +7,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 
 import {
@@ -32,6 +33,18 @@ import ResponseData from 'src/utils/response-data';
 @Controller('chat-channels')
 export class ChatChannelsController {
   constructor(private readonly chatChannelsService: ChatChannelsService) {}
+
+  @ApiOperation({
+    summary: 'Get a chat channel by ID',
+    description: 'Get a chat channel by ID',
+  })
+  @ApiOkResponse({ description: 'Get a chat channel by ID successfully' })
+  @ApiBadRequestResponse({ description: 'Get a chat channel by ID failed' })
+  @Get(':id')
+  async get(@Req() req, @Param('id') id: string) {
+    const { _id } = req.user;
+    return this.chatChannelsService.getOne(id, _id);
+  }
 
   @ApiOperation({
     summary: 'Create a new chat channel',

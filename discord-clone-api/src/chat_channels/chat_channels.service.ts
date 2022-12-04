@@ -31,6 +31,52 @@ export class ChatChannelsService {
     });
   }
 
+  async getOne(_id: string, requestorId: string) {
+    const members = await (
+      await this.chatChannelModel.findById({ _id }).lean().exec()
+    ).members;
+
+    const isMember = members.some(
+      (member) => member.toString() === requestorId.toString(),
+    );
+
+    // console.log(isMember, requestorId);
+
+    if (isMember) {
+      const chatChannel = await this.chatChannelModel
+        .findById({ _id })
+        .lean()
+        .populate('members', [
+          '_id',
+          '_uid',
+          'avatar',
+          'wallpaper',
+          'bio',
+          'createAt',
+          'status',
+        ])
+        .populate({ path: 'messages', populate: 'ownerId' })
+        .exec();
+
+      if (!chatChannel) {
+        return null;
+      }
+      return chatChannel;
+    }
+    return null;
+  }
+
+  async findOne(_id: string) {
+    return this.chatChannelModel.findById(_id).lean().exec();
+  }
+
+  async updateFromMessage(
+    _id: string,
+    updateChatChannelDto: UpdateChatChannelDto,
+  ) {
+    return this.chatChannelModel.updateOne({ _id }, updateChatChannelDto);
+  }
+
   async update(
     _id: string,
     hostId: string,
