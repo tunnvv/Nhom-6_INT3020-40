@@ -41,8 +41,9 @@ export class ChatChannelsController {
   @ApiOkResponse({ description: 'Get a chat channel by ID successfully' })
   @ApiBadRequestResponse({ description: 'Get a chat channel by ID failed' })
   @Get(':id')
-  async getOne(@Param('id') id: string) {
-    return this.chatChannelsService.findOne(id);
+  async get(@Req() req, @Param('id') id: string) {
+    const { _id } = req.user;
+    return this.chatChannelsService.getOne(id, _id);
   }
 
   @ApiOperation({
