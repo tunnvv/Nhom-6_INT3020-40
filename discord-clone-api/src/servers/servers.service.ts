@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
@@ -12,10 +12,12 @@ export class ServersService {
     private usersService: UsersService,
   ) {}
 
+  // CREATE A NEW SERVER
+  //    - need add the new server created to server list of host
   async create(createServerDto: CreateServerDto) {
     const server = new this.serverModel(createServerDto);
 
-    // host add this new server to the server list
+    // host add this new server created to the server list
     this.usersService.updateServerList(
       createServerDto.hostId,
       server._id.toString(),
@@ -24,8 +26,34 @@ export class ServersService {
     return server.save();
   }
 
-  async findOne(_id: string, hostId: string) {
+  // FIND ONE, WITH AUTHENTIC HOST
+  async findWithHostId(_id: string, hostId: string) {
     return this.serverModel.findOne({ _id, hostId }).lean().exec();
+  }
+
+  // FIND ONE, WITH AUTHENTIC MEMBERS
+  async findWithMemberId(_id: string, requestorId: string) {
+    const members = await (
+      await this.serverModel.findById(_id).lean().exec()
+    ).members;
+
+    const isMember = members.some(
+      (member) => member.toString() === requestorId,
+    );
+
+    if (isMember) {
+      const server = await this.serverModel
+        .findById(_id)
+        .lean()
+        .populate('chatChannels')
+        .populate('callChannels')
+        .exec();
+      if (server) {
+        return server;
+      }
+      return null;
+    }
+    throw new ForbiddenException('Permission denied');
   }
 
   async update(_id: string, hostId: string, updateServerDto: UpdateServerDto) {

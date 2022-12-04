@@ -13,10 +13,11 @@ export class ChatChannelsService {
     private serversService: ServersService,
   ) {}
 
+  // HOST ADD NEW CHANNEL
   async create(createChatChannelDto: CreateChatChannelDto) {
-    // only host can find this's server_id
+    // only host can find server
     const { hostId, serverId } = createChatChannelDto;
-    const server = await this.serversService.findOne(serverId, hostId);
+    const server = await this.serversService.findWithHostId(serverId, hostId);
     if (!server) {
       return null;
     }
