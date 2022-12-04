@@ -26,7 +26,7 @@ export class CallChannelsService {
     await callChannel.save();
 
     const newCallChannelList = [callChannel._id].concat(server.callChannels);
-    return this.serversService.updateFromChannel(serverId, {
+    return this.serversService.updateChannelList(serverId, {
       callChannels: newCallChannelList,
     });
   }
