@@ -7,6 +7,7 @@ import {
   UseGuards,
   Req,
   Patch,
+  Get,
 } from '@nestjs/common';
 
 import {
@@ -32,6 +33,7 @@ import { CreateServerDto, UpdateServerDto } from './dto';
 export class ServersController {
   constructor(private readonly serversService: ServersService) {}
 
+  // CREATE A NEW SERVER
   @ApiOperation({
     summary: 'Create a new server',
     description: 'Create a new server',
@@ -39,12 +41,26 @@ export class ServersController {
   @ApiOkResponse({ description: 'Create a new server successfully' })
   @ApiBadRequestResponse({ description: 'Create a new server failed' })
   @Post()
-  create(@Req() req, @Body() createServerDto: CreateServerDto) {
-    const _id = req.user;
+  async create(@Req() req, @Body() createServerDto: CreateServerDto) {
+    const { _id } = req.user;
     createServerDto.hostId = _id;
     return this.serversService.create(createServerDto);
   }
 
+  // GET SERVER, MEMBER GET SERVER
+  @ApiOperation({
+    summary: 'Member get server information by ID',
+    description: 'Member get server information by ID',
+  })
+  @ApiOkResponse({ description: 'Get server information successfully' })
+  @ApiBadRequestResponse({ description: 'Get server informationi failed' })
+  @Get(':id')
+  async get(@Req() req, @Param('id') serverId: string) {
+    const { _id } = req.user;
+    return this.serversService.findWithMemberId(serverId, _id);
+  }
+
+  // UPDATE SERVER INFORMATION
   @ApiOperation({
     summary: 'Owner updates server information by ID',
     description: 'Owner updates server information by ID',
@@ -66,17 +82,18 @@ export class ServersController {
     );
   }
 
+  // FROM RECEIVER, AUTO UPDATE MEMBER LIST WHEN RECEIVER ACCEPTED
   @ApiOperation({
-    summary: 'From receiver, auto updates list member of server by ID',
-    description: 'From receiver, auto updates list member of server by ID',
+    summary: 'From receiver, auto updates member list of server by ID',
+    description: 'From receiver, auto updates member list of server by ID',
   })
   @ApiOkResponse({
     description:
-      'From receiver, auto updates list member of server by ID successfully',
+      'From receiver, auto updates member list of server by ID successfully',
   })
   @ApiBadRequestResponse({
     description:
-      'From receiver, auto updates list member of server by ID failed',
+      'From receiver, auto updates member list of server by ID failed',
   })
   @Patch('member/:id')
   async addNewMember(@Req() request, @Param('id') id: string) {
@@ -84,7 +101,7 @@ export class ServersController {
     await this.serversService.updateMemberList(id, userId);
     return new ResponseData(
       true,
-      { message: 'Update list member successfully' },
+      { message: 'Update member list successfully' },
       null,
     );
   }

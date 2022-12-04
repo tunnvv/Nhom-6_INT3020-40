@@ -15,7 +15,7 @@ export class CallChannelsService {
 
   async create(createCallChannelDto: CreateCallChannelDto) {
     const { hostId, serverId } = createCallChannelDto;
-    const server = await this.serversService.findOne(serverId, hostId);
+    const server = await this.serversService.findWithHostId(serverId, hostId);
 
     if (!server) {
       return null;
