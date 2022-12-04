@@ -5,6 +5,8 @@ import 'package:discord_clone/screens/welcome/welcome_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+final _storageBox = Hive.box("storageBox");
+
 void main() async {
   // initalize hive
   await Hive.initFlutter();
@@ -18,8 +20,6 @@ void main() async {
 class DiscordClone extends StatelessWidget {
   DiscordClone({super.key});
 
-  final _storageBox = Hive.box("storageBox");
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +32,7 @@ class DiscordClone extends StatelessWidget {
         ),
       ),
       home: _storageBox.get("accessToken") != null
-          ? const WelcomeScreen()
+          ? const HomeScreen()
           : const WelcomeScreen(),
     );
   }

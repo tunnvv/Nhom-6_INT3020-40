@@ -1,3 +1,4 @@
+import 'package:discord_clone/helpers/api/chat_channel.api.dart';
 import 'package:discord_clone/helpers/api/servers.api.dart';
 import 'package:discord_clone/helpers/api/users.api.dart';
 import 'package:discord_clone/helpers/constains/colors.dart';
@@ -8,6 +9,9 @@ import 'package:discord_clone/widgets/channel_item.dart';
 import 'package:discord_clone/widgets/group_channel_title.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
+
+final storageBox = Hive.box("storageBox");
 
 class ChannelScreen extends StatefulWidget {
   const ChannelScreen({super.key});
@@ -17,8 +21,14 @@ class ChannelScreen extends StatefulWidget {
 }
 
 class _ChannelScreenState extends State<ChannelScreen> {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController serverNameController = TextEditingController();
+  TextEditingController chatChannelNameController = TextEditingController();
+  TextEditingController callChannelNameController = TextEditingController();
   late Future<User> me;
+  dynamic currentServer = storageBox.get("currentServer");
+  dynamic currentChatChannel = storageBox.get("currentChatChannel");
+  bool isExpandChatChannel = true;
+  bool isExpandCallChannel = true;
 
   @override
   void initState() {
@@ -29,7 +39,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
   @override
   void dispose() {
     super.dispose();
-    nameController.dispose();
+    serverNameController.dispose();
+    chatChannelNameController.dispose();
+    callChannelNameController.dispose();
   }
 
   @override
@@ -62,14 +74,59 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                   padding: const EdgeInsets.all(4.0),
                                   child: index != snapshot.data?.servers.length
                                       ? GestureDetector(
-                                          child: CircleAvatar(
-                                            radius: 24,
-                                            backgroundColor:
-                                                channelBackgroundColor,
-                                            backgroundImage: NetworkImage(
-                                              getAvatar(),
-                                            ),
-                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              currentServer = index;
+                                              storageBox.put(
+                                                  "currentServer", index);
+                                              if (snapshot.data!.servers[index]
+                                                  .chatChannels.isNotEmpty) {
+                                                currentChatChannel = 0;
+                                                storageBox.put(
+                                                    "currentChatChannel", 0);
+                                              } else {
+                                                currentChatChannel = null;
+                                                storageBox.delete(
+                                                    "currentChatChannel");
+                                              }
+                                            });
+                                          },
+                                          child: currentServer == index
+                                              ? Container(
+                                                  padding:
+                                                      const EdgeInsets.all(2),
+                                                  decoration: const BoxDecoration(
+                                                      color:
+                                                          signinLoginButtonColor,
+                                                      shape: BoxShape.circle),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(2),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            color:
+                                                                statusBarColor,
+                                                            shape: BoxShape
+                                                                .circle),
+                                                    child: CircleAvatar(
+                                                      radius: 22,
+                                                      backgroundColor:
+                                                          channelBackgroundColor,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                        getAvatar(index),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : CircleAvatar(
+                                                  radius: 22,
+                                                  backgroundColor:
+                                                      channelBackgroundColor,
+                                                  backgroundImage: NetworkImage(
+                                                    getAvatar(index),
+                                                  ),
+                                                ),
                                         )
                                       : RawMaterialButton(
                                           fillColor: channelBackgroundColor,
@@ -132,7 +189,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                                         width: double.infinity,
                                                         child: TextField(
                                                           controller:
-                                                              nameController,
+                                                              serverNameController,
                                                           cursorColor:
                                                               cursorColor,
                                                           style: const TextStyle(
@@ -196,7 +253,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                                         ),
                                                         onPressed: () async {
                                                           final String name =
-                                                              nameController
+                                                              serverNameController
                                                                   .text;
                                                           ApiResponse
                                                               apiResponse =
@@ -205,7 +262,7 @@ class _ChannelScreenState extends State<ChannelScreen> {
 
                                                           if (apiResponse
                                                               .isSuccess) {
-                                                            () => Navigator.pop(
+                                                            Navigator.pop(
                                                                 context);
 
                                                             Fluttertoast
@@ -222,6 +279,9 @@ class _ChannelScreenState extends State<ChannelScreen> {
                                                               textColor:
                                                                   whiteColor,
                                                             );
+
+                                                            serverNameController
+                                                                .clear();
                                                           }
                                                         },
                                                         child: const Text(
@@ -246,90 +306,294 @@ class _ChannelScreenState extends State<ChannelScreen> {
                   Expanded(
                     child: Container(
                         color: channelBackgroundColor,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 20),
-                              child: Row(
-                                children: const [
-                                  Expanded(
-                                    child: Text(
-                                      "J2Team",
-                                      style: TextStyle(
-                                          color: whiteColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w900),
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.more_horiz,
-                                    color: channelIconColor,
-                                  )
-                                ],
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size.fromHeight(42),
-                                padding: EdgeInsets.zero,
-                                backgroundColor: welcomeLoginButtonColor,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                              ),
-                              onPressed: () {},
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.person_add,
-                                    color: channelIconColor,
-                                  ),
-                                  Text('Lời mời'),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                  itemCount: 2,
-                                  scrollDirection: Axis.vertical,
-                                  itemBuilder: (context, index) {
-                                    return Theme(
-                                      data: ThemeData().copyWith(
-                                          dividerColor: Colors.transparent),
-                                      child: ExpansionTile(
-                                        backgroundColor: channelBackgroundColor,
-                                        title: const GroupChannelTitleWidget(
-                                            name: "KÊNH CHAT"),
-                                        onExpansionChanged: (value) {},
-                                        tilePadding: const EdgeInsets.symmetric(
-                                            horizontal: 6),
-                                        trailing: const Icon(
-                                          Icons.add,
-                                          color: channelIconColor,
-                                          size: 20,
-                                        ),
-                                        controlAffinity:
-                                            ListTileControlAffinity.trailing,
-                                        children: <Widget>[
-                                          ChannelItemWidget(
-                                              key: Key(
-                                                  'expansionTileChannel$index'),
-                                              type: ChannelItemType.chat,
-                                              name: "chung"),
-                                          ChannelItemWidget(
-                                              key: Key(
-                                                  'expansionTileCall$index'),
-                                              type: ChannelItemType.callVideo,
-                                              name: "Phòng chờ")
+                        child: currentServer != null
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0, vertical: 20),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              snapshot.data!
+                                                  .servers[currentServer].name,
+                                              style: const TextStyle(
+                                                  color: whiteColor,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w900),
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.more_horiz,
+                                            color: channelIconColor,
+                                          )
                                         ],
                                       ),
-                                    );
-                                  }),
-                            ),
-                          ],
-                        )),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0, vertical: 8),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(42),
+                                          padding: EdgeInsets.zero,
+                                          backgroundColor:
+                                              welcomeLoginButtonColor,
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                        ),
+                                        onPressed: () {},
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              Icons.person_add,
+                                              color: whiteColor,
+                                              size: 16,
+                                            ),
+                                            SizedBox(width: 6),
+                                            Text('Lời mời'),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        Theme(
+                                          data: ThemeData().copyWith(
+                                              dividerColor: Colors.transparent),
+                                          child: ExpansionTile(
+                                            backgroundColor:
+                                                channelBackgroundColor,
+                                            title: GroupChannelTitleWidget(
+                                                isExpand: isExpandChatChannel,
+                                                name: "KÊNH CHAT"),
+                                            onExpansionChanged: (value) {
+                                              setState(() {
+                                                isExpandChatChannel = value;
+                                              });
+                                            },
+                                            initiallyExpanded: true,
+                                            tilePadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 6),
+                                            trailing: GestureDetector(
+                                              child: const Icon(
+                                                Icons.add,
+                                                color: channelIconColor,
+                                                size: 20,
+                                              ),
+                                              onTap: () {
+                                                showModalBottomSheet<dynamic>(
+                                                  isScrollControlled: true,
+                                                  context: context,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.6,
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              16),
+                                                      decoration: const BoxDecoration(
+                                                          color:
+                                                              bottomSheetBackgroundColor,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          8),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          8))),
+                                                      child: Column(
+                                                        children: [
+                                                          const Text(
+                                                            "Tạo Kênh Chat",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color: whiteColor,
+                                                              fontSize: 26,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 12,
+                                                          ),
+                                                          SizedBox(
+                                                            width:
+                                                                double.infinity,
+                                                            child: TextField(
+                                                              controller:
+                                                                  chatChannelNameController,
+                                                              cursorColor:
+                                                                  cursorColor,
+                                                              style: const TextStyle(
+                                                                  color:
+                                                                      whiteColor),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                hintText:
+                                                                    "Nhập Tên Kênh Chat",
+                                                                hintStyle:
+                                                                    const TextStyle(
+                                                                        color:
+                                                                            bottomSheetTextSecondaryColor,
+                                                                        fontSize:
+                                                                            14),
+                                                                filled: true,
+                                                                fillColor:
+                                                                    bottomSheetBackgroundWidgetColor,
+                                                                contentPadding:
+                                                                    const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            12.0,
+                                                                        vertical:
+                                                                            4.0),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              4),
+                                                                  borderSide:
+                                                                      const BorderSide(
+                                                                    width: 0,
+                                                                    style:
+                                                                        BorderStyle
+                                                                            .none,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          ElevatedButton(
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              minimumSize:
+                                                                  const Size
+                                                                      .fromHeight(42),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              backgroundColor:
+                                                                  welcomeRegisterButtonColor,
+                                                              elevation: 0,
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              4)),
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              final String
+                                                                  name =
+                                                                  chatChannelNameController
+                                                                      .text;
+                                                              ApiResponse
+                                                                  apiResponse =
+                                                                  await createChatChannel(
+                                                                      name,
+                                                                      snapshot
+                                                                          .data!
+                                                                          .servers[
+                                                                              currentServer]
+                                                                          .id);
+
+                                                              if (apiResponse
+                                                                  .isSuccess) {
+                                                                Navigator.pop(
+                                                                    context);
+
+                                                                Fluttertoast
+                                                                    .showToast(
+                                                                  msg: apiResponse
+                                                                      .payload
+                                                                      .message,
+                                                                  toastLength: Toast
+                                                                      .LENGTH_SHORT,
+                                                                  timeInSecForIosWeb:
+                                                                      1,
+                                                                  backgroundColor:
+                                                                      signinLoginButtonColor,
+                                                                  textColor:
+                                                                      whiteColor,
+                                                                );
+
+                                                                chatChannelNameController
+                                                                    .clear();
+                                                              }
+                                                            },
+                                                            child: const Text(
+                                                                'Tạo Kênh Chat'),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                            controlAffinity:
+                                                ListTileControlAffinity
+                                                    .trailing,
+                                            children: <Widget>[
+                                              ListView.builder(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: snapshot
+                                                    .data!
+                                                    .servers[currentServer]
+                                                    .chatChannels
+                                                    .length,
+                                                scrollDirection: Axis.vertical,
+                                                itemBuilder: (context, index) {
+                                                  return ChannelItemWidget(
+                                                      type:
+                                                          ChannelItemType.chat,
+                                                      name: snapshot
+                                                          .data!
+                                                          .servers[
+                                                              currentServer]
+                                                          .chatChannels[index]
+                                                          .name);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        //
+                                      ],
+                                    ),
+                                  ])
+                            : const Center(
+                                child: Text(
+                                "Hãy Lựa Chọn Máy Chủ",
+                                style: TextStyle(color: channelIconColor),
+                              ))),
                   ),
                 ],
               );

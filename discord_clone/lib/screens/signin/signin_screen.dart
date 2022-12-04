@@ -33,10 +33,10 @@ class _SigninScreenState extends State<SigninScreen> {
       dynamic auth = await login(email, password);
 
       if (auth != null) {
-        () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
       }
     }
   }

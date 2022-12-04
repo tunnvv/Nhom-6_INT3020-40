@@ -13,9 +13,11 @@ const List<String> avatarList = [
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqlgCnRecg8RgPt5sl721a9oIO2pzCEPjKSA&usqp=CAU"
 ];
 
-// generates a new Random object
+String getAvatar(int index) {
+  return avatarList[index % avatarList.length];
+}
 
-String getAvatar() {
+String getRandomAvatar() {
   final random = Random();
   return avatarList[random.nextInt(avatarList.length)];
 }

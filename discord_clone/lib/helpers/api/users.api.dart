@@ -12,6 +12,11 @@ Future<User> getMyInfo() async {
 
   if (user.servers.isNotEmpty) {
     _storageBox.put("currentServer", 0);
+    if (user.servers[0].chatChannels.isNotEmpty) {
+      _storageBox.put("currentChatChannel", 0);
+    } else {
+      _storageBox.delete("currentChatChannel");
+    }
   } else {
     _storageBox.delete("currentServer");
   }
