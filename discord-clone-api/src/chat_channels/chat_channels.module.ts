@@ -14,5 +14,6 @@ import { ChatChannel, ChatChannelSchema } from './schemas';
   ],
   controllers: [ChatChannelsController],
   providers: [ChatChannelsService],
+  exports: [ChatChannelsService],
 })
 export class ChatChannelsModule {}

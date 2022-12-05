@@ -51,10 +51,16 @@ export class User {
   @Prop({ default: 'Online' })
   status: 'Online' | 'Offline';
 
-  @Prop({ default: 'link image' })
+  @Prop({
+    default:
+      'https://i.pinimg.com/736x/39/05/ca/3905ca871396b1715a90615a92466b0d.jpg',
+  })
   wallpaper: string;
 
-  @Prop({ default: 'link image' })
+  @Prop({
+    default:
+      'https://user-images.githubusercontent.com/62609188/205458937-cf591903-c822-4e42-9d81-2af862943a60.jpg',
+  })
   avatar: string;
 
   @Prop({ default: '' })

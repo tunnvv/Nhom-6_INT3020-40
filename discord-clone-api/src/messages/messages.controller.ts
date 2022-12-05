@@ -44,10 +44,16 @@ export class MessagesController {
     @Req() req,
     @Body() createMessageDto: CreateMessageDto,
   ) {
+    //  Assign owner of message
     const { _id } = req.user;
     createMessageDto.ownerId = _id;
-    const message = this.messagesService.create(createMessageDto);
-    return message;
+
+    await this.messagesService.create(createMessageDto);
+    return new ResponseData(
+      true,
+      { message: 'Thêm tin nhắn thành công' },
+      null,
+    );
   }
 
   @ApiOperation({

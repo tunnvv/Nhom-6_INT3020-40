@@ -65,10 +65,20 @@ export class UsersService {
     }
   }
 
-  async findByNameID(uid: string): Promise<User> {
+  async findByNameID(uid: string): Promise<ShortUserInfo> {
     try {
       const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
-      return user;
+      if (!user) return null;
+
+      return {
+        _id: user._id,
+        _uid: user._uid,
+        name: user.name,
+        avatar: user.avatar,
+        status: user.status,
+        bio: user.bio,
+        wallpaper: user.wallpaper,
+      };
     } catch (err) {
       if (err.code == 404) {
         throw new ForbiddenException('User not found');

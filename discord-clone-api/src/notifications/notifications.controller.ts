@@ -24,6 +24,7 @@ import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 
 import ResponseData from 'src/utils/response-data';
+import { UpdateNotificationDto } from 'src/notifications/dto/update-notification.dto';
 
 @ApiTags('Notifications')
 @ApiBearerAuth()
@@ -57,7 +58,7 @@ export class NotificationsController {
     }
 
     return new ResponseData(
-      true,
+      false,
       { message: 'Tạo thông báo thành công' },
       null,
     );
@@ -76,7 +77,7 @@ export class NotificationsController {
   @Get()
   async getAllForReceiver(@Req() req) {
     const { _id } = req.user;
-    return await this.notificationsService.findAllForReceiver(_id.toString());
+    return await this.notificationsService.findAllForReceiver(_id);
   }
 
   @ApiOperation({
@@ -97,6 +98,35 @@ export class NotificationsController {
   async getOnebyId(@Req() req, @Param('id') _notiId: string) {
     const { _id } = req.user;
     return await this.notificationsService.findOne(_notiId, _id.toString());
+  }
+
+  @ApiOperation({
+    summary: 'Update the notification by ID',
+    description: 'Update the notification by ID',
+  })
+  @ApiOkResponse({
+    description: 'Update the notification successfully',
+  })
+  @ApiBadRequestResponse({
+    description: 'Update the notification failed',
+  })
+  @Patch(':id')
+  async updateContentMessage(
+    @Param('id') notificationId: string,
+    @Req() req,
+    @Body() updateNotificationDto: UpdateNotificationDto,
+  ) {
+    const { _id: receiver } = req.user;
+    await this.notificationsService.update(
+      notificationId,
+      receiver,
+      updateNotificationDto,
+    );
+    return new ResponseData(
+      true,
+      { message: 'Update notification successfully' },
+      null,
+    );
   }
 
   @ApiOperation({

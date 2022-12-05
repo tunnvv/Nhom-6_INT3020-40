@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ChatChannelsService } from 'src/chat_channels/chat_channels.service';
 import { CreateMessageDto, UpdateMessageDto } from './dto';
 import { Message, MessageDocument } from './schemas';
 
@@ -13,11 +14,27 @@ import { Message, MessageDocument } from './schemas';
 export class MessagesService {
   constructor(
     @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
+    private chatChannelsService: ChatChannelsService,
   ) {}
 
   async create(createMessageDto: CreateMessageDto) {
-    // get current miliseconds time and set to create_at
-    const message = new this.messageModel(createMessageDto);
+    // confirm found chat channel
+    const { chatChannelId } = createMessageDto;
+
+    const chatChannel = await this.chatChannelsService.findOne(chatChannelId);
+
+    if (!chatChannel) {
+      return null;
+    }
+
+    // create new message
+    const message = await this.messageModel.create(createMessageDto);
+    // add and update list message of chat channel
+    const newChatList = [message._id].concat(chatChannel.messages);
+    console.log(newChatList);
+    this.chatChannelsService.updateFromMessage(chatChannelId, {
+      messages: newChatList,
+    });
 
     return message.save();
   }
