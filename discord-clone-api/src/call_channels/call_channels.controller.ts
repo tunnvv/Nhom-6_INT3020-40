@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Req,
+  Get,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -32,6 +33,24 @@ import { CreateCallChannelDto, UpdateCallChannelDto } from './dto';
 export class CallChannelsController {
   constructor(private readonly callChannelsService: CallChannelsService) {}
 
+  // MEMBERS CAN GET A CHANNEL
+  @ApiOperation({
+    summary: 'Member get a chat channel by ID',
+    description: 'Member get a chat channel by ID',
+  })
+  @ApiOkResponse({
+    description: 'Member get a chat channel by ID successfully',
+  })
+  @ApiBadRequestResponse({
+    description: ' Member get a chat channel by ID failed',
+  })
+  @Get(':id')
+  async get(@Req() req, @Param('id') id: string) {
+    const { _id } = req.user;
+    return this.callChannelsService.getWithMemberId(id, _id.toString());
+  }
+
+  // CREATE A NEW CALL CHANNEL
   @ApiOperation({
     summary: 'Create a new call channel',
     description: 'Create a new call channel',
@@ -53,23 +72,26 @@ export class CallChannelsController {
     );
   }
 
+  // FROM RECEIVER, AUTO UPDATE MEMBER LIST WHEN RECEIVER ACCEPTED
   @ApiOperation({
-    summary: 'Owner updates a call channel by ID',
-    description: 'Owner updates a call channel by ID',
+    summary: "From receiver, auto updates channel's member list by ID",
+    description: "From receiver, auto updates channel's member list by ID",
   })
-  @ApiOkResponse({ description: 'Update a call channel by ID successfully' })
-  @ApiBadRequestResponse({ description: 'Update a call channel by ID failed' })
-  @Patch(':id')
-  async update(
-    @Req() request,
-    @Param('id') id: string,
-    @Body() updateCallChannelDto: UpdateCallChannelDto,
-  ) {
-    const { _id: hostId } = request.user;
-    await this.callChannelsService.update(id, hostId, updateCallChannelDto);
+  @ApiOkResponse({
+    description:
+      "From receiver, auto updates channel's member list by ID successfully",
+  })
+  @ApiBadRequestResponse({
+    description:
+      "From receiver, auto updates channel's member list by ID failed",
+  })
+  @Patch(':id/members')
+  async addNewMember(@Req() request, @Param('id') id: string) {
+    const { _id: userId } = request.user;
+    await this.callChannelsService.updateMemberList(id, userId.toString());
     return new ResponseData(
       true,
-      { message: 'Update a call channel by ID successfully' },
+      { message: 'Update member list successfully' },
       null,
     );
   }
