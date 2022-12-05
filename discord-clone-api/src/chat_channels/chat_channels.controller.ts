@@ -34,18 +34,24 @@ import ResponseData from 'src/utils/response-data';
 export class ChatChannelsController {
   constructor(private readonly chatChannelsService: ChatChannelsService) {}
 
+  // MEMBERS CAN GET A CHANNEL
   @ApiOperation({
-    summary: 'Get a chat channel by ID',
-    description: 'Get a chat channel by ID',
+    summary: 'Member get a chat channel by ID',
+    description: 'Member get a chat channel by ID',
   })
-  @ApiOkResponse({ description: 'Get a chat channel by ID successfully' })
-  @ApiBadRequestResponse({ description: 'Get a chat channel by ID failed' })
+  @ApiOkResponse({
+    description: 'Member get a chat channel by ID successfully',
+  })
+  @ApiBadRequestResponse({
+    description: ' Member get a chat channel by ID failed',
+  })
   @Get(':id')
   async get(@Req() req, @Param('id') id: string) {
     const { _id } = req.user;
-    return this.chatChannelsService.getOne(id, _id);
+    return this.chatChannelsService.getWithMemberId(id, _id.toString());
   }
 
+  // SERVER HOST CAN CREATE A NEW CHANNEL
   @ApiOperation({
     summary: 'Create a new chat channel',
     description: 'Create a new chat channel',
@@ -67,27 +73,31 @@ export class ChatChannelsController {
     );
   }
 
+  // FROM RECEIVER, AUTO UPDATE MEMBER LIST WHEN RECEIVER ACCEPTED
   @ApiOperation({
-    summary: 'Owner updates a chat channel by ID',
-    description: 'Owner updates a chat channel by ID',
+    summary: "From receiver, auto updates channel's member list by ID",
+    description: "From receiver, auto updates channel's member list by ID",
   })
-  @ApiOkResponse({ description: 'Update a chat channel by ID successfully' })
-  @ApiBadRequestResponse({ description: 'Update a chat channel by ID failed' })
-  @Patch(':id')
-  async update(
-    @Req() request,
-    @Param('id') id: string,
-    @Body() updateChatChannelDto: UpdateChatChannelDto,
-  ) {
-    const { _id: hostId } = request.user;
-    await this.chatChannelsService.update(id, hostId, updateChatChannelDto);
+  @ApiOkResponse({
+    description:
+      "From receiver, auto updates channel's member list by ID successfully",
+  })
+  @ApiBadRequestResponse({
+    description:
+      "From receiver, auto updates channel's member list by ID failed",
+  })
+  @Patch(':id/members')
+  async addNewMember(@Req() request, @Param('id') id: string) {
+    const { _id: userId } = request.user;
+    await this.chatChannelsService.updateMemberList(id, userId.toString());
     return new ResponseData(
       true,
-      { message: 'Update a chat channel by ID successfully' },
+      { message: 'Update member list successfully' },
       null,
     );
   }
 
+  // SERVER HOST CAN DELETE CHANNEL
   @ApiOperation({
     summary: 'Owner deletes a chat channel by ID',
     description: 'Owner deletes a chat channel by ID',
