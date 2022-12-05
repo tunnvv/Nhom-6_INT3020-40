@@ -15,15 +15,22 @@ export class ServersService {
   // CREATE A NEW SERVER
   //    - need add the new server created to server list of host
   async create(createServerDto: CreateServerDto) {
-    const server = new this.serverModel(createServerDto);
+    const { hostId } = createServerDto;
+    const host = this.usersService.findByObjID(hostId);
+    if (!host) {
+      throw new ForbiddenException("User id wrong, can't create a server");
+    }
+
+    // create a new server
+    const server = await new this.serverModel(createServerDto);
+    server.members.push(hostId);
+    await server.save();
 
     // host add this new server created to the server list
-    this.usersService.updateServerList(
+    return this.usersService.updateServerList(
       createServerDto.hostId,
       server._id.toString(),
     );
-
-    return server.save();
   }
 
   // FIND ONE, WITH AUTHENTIC HOST
@@ -31,13 +38,15 @@ export class ServersService {
     return this.serverModel.findOne({ _id, hostId }).lean().exec();
   }
 
-  // FIND ONE, WITH AUTHENTIC MEMBERS
-  async findWithMemberId(_id: string, requestorId: string) {
-    const members = await (
-      await this.serverModel.findById(_id).lean().exec()
-    ).members;
+  // GET ONE, WITH AUTHENTIC HOST || MEMBERS
+  async getWithMemberId(_id: string, requestorId: string) {
+    const server = await this.serverModel.findById(_id).lean().exec();
 
-    const isMember = members.some(
+    if (!server) {
+      throw new ForbiddenException('Server not found');
+    }
+
+    const isMember = server.members.some(
       (member) => member.toString() === requestorId,
     );
 
@@ -56,49 +65,6 @@ export class ServersService {
     throw new ForbiddenException('Permission denied');
   }
 
-  async update(_id: string, hostId: string, updateServerDto: UpdateServerDto) {
-    const server = await this.serverModel
-      .findOne({ _id, hostId })
-      .lean()
-      .exec();
-
-    if (!server) {
-      return null;
-    }
-
-    // SERVER UPDATE MEMBERS ADN MEMBERS UPDATE SERVER
-    if (updateServerDto.members) {
-      // find users is really exist, assign them to updateServerDto.members
-      const findedUsers = [];
-      updateServerDto.members.forEach((userId) => {
-        if (this.usersService.findByObjID(userId)) {
-          findedUsers.push(userId);
-        }
-      });
-      updateServerDto.members = findedUsers;
-
-      // members update servers, checked unique servers for members
-      updateServerDto.members.forEach((member) => {
-        this.usersService.updateServerList(member, server._id);
-      });
-
-      // server update members, check unique servers for members
-      let newFriends = updateServerDto.members.concat(server.members);
-      const tmp = [];
-      newFriends = newFriends.reduce((friendListNotDuplicate, element) => {
-        if (!tmp.includes(element.toString())) {
-          friendListNotDuplicate.push(element);
-          tmp.push(element.toString());
-        }
-        return friendListNotDuplicate;
-      }, []);
-
-      updateServerDto.members = newFriends;
-    }
-
-    return this.serverModel.updateOne({ _id, hostId }, updateServerDto);
-  }
-
   // ADD A NEW USER TO MEMBER LIST
   // - need to check the members are not duplicated
   //      + check when adding member to member list
@@ -110,10 +76,10 @@ export class ServersService {
       return null;
     }
 
-    // add this server to the server list of user
+    // add this server to the user's server list
     this.usersService.updateServerList(userId, server._id.toString());
 
-    // add this user to member list of server
+    // add this user to server's member list
     let newMembers = [userId].concat(server.members);
     const tmp = [];
     newMembers = newMembers.reduce((memberListNotDuplicate, element) => {

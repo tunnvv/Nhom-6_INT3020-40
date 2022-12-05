@@ -57,29 +57,7 @@ export class ServersController {
   @Get(':id')
   async get(@Req() req, @Param('id') serverId: string) {
     const { _id } = req.user;
-    return this.serversService.findWithMemberId(serverId, _id);
-  }
-
-  // UPDATE SERVER INFORMATION
-  @ApiOperation({
-    summary: 'Owner updates server information by ID',
-    description: 'Owner updates server information by ID',
-  })
-  @ApiOkResponse({ description: 'Update server information successfully' })
-  @ApiBadRequestResponse({ description: 'Update server informationi failed' })
-  @Patch(':id')
-  async update(
-    @Req() request,
-    @Param('id') id: string,
-    @Body() updateServerDto: UpdateServerDto,
-  ) {
-    const { _id: hostId } = request.user;
-    await this.serversService.update(id, hostId, updateServerDto);
-    return new ResponseData(
-      true,
-      { message: 'Update server information successfully' },
-      null,
-    );
+    return this.serversService.getWithMemberId(serverId, _id.toString());
   }
 
   // FROM RECEIVER, AUTO UPDATE MEMBER LIST WHEN RECEIVER ACCEPTED
@@ -95,7 +73,7 @@ export class ServersController {
     description:
       'From receiver, auto updates member list of server by ID failed',
   })
-  @Patch('member/:id')
+  @Patch(':id/members')
   async addNewMember(@Req() request, @Param('id') id: string) {
     const { _id: userId } = request.user;
     await this.serversService.updateMemberList(id, userId);

@@ -31,8 +31,7 @@ export class MessagesService {
     const message = await this.messageModel.create(createMessageDto);
     // add and update list message of chat channel
     const newChatList = [message._id].concat(chatChannel.messages);
-    console.log(newChatList);
-    this.chatChannelsService.updateFromMessage(chatChannelId, {
+    this.chatChannelsService.updateMessageList(chatChannelId, {
       messages: newChatList,
     });
 
@@ -54,6 +53,7 @@ export class MessagesService {
     }
   }
 
+  // OWNER UPDATE MESSAGE
   async update(
     mesId: string,
     ownerId: string,
@@ -71,6 +71,7 @@ export class MessagesService {
     }
   }
 
+  // OWNER DELETE A MESSAGE BY ID
   async remove(mesId: string, _ownerId: string) {
     try {
       const message = await this.messageModel

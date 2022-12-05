@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
@@ -13,15 +18,29 @@ export class NotificationsService {
     private userServices: UsersService,
   ) {}
 
+  // CREATE A NEW NOTIFICATION
   async create(createNotificationDto: CreateNotificationDto) {
     try {
+      let receiver;
+
+      if (createNotificationDto.friendUID) {
+        receiver = await this.userServices.findByNameID(
+          createNotificationDto.friendUID,
+        );
+        createNotificationDto.receiver = receiver._id.toString();
+      } else if (createNotificationDto.receiver) {
+        receiver = await this.userServices.findByObjID(
+          createNotificationDto.receiver,
+        );
+      }
+
+      if (!receiver) {
+        return "Can't find receiver";
+      }
+
       const notification = await new this.notificationModel(
         createNotificationDto,
       );
-      const receiver = await this.userServices.findByNameID(
-        createNotificationDto.friendUID,
-      );
-      notification.receiver = receiver._id;
       await notification.save();
       return notification;
     } catch (err) {
@@ -29,6 +48,7 @@ export class NotificationsService {
     }
   }
 
+  // FIND ALL NOTI OF ONE USER
   async findAllForReceiver(userId: string) {
     // console.log(userId);
     const notifications = await this.notificationModel
@@ -47,10 +67,11 @@ export class NotificationsService {
     return notifications;
   }
 
-  async findOne(_notiId: string, requestId: string) {
+  // FIND ONE NOTIFICATION
+  async findOne(_notiId: string, requestorId: string) {
     // console.log(_notiId, requestId);
     const notification = await this.notificationModel
-      .findOne({ _id: _notiId, receiver: requestId })
+      .findOne({ _id: _notiId, receiver: requestorId })
       .lean()
       .populate('sender', ['_uid', 'name', 'avatar'])
       .exec();
@@ -60,6 +81,7 @@ export class NotificationsService {
     return notification;
   }
 
+  // REMOVE A NOTIFICATION
   async remove(_notiId: string, requestId: string) {
     // console.log(requestId);
     const notification = await this.notificationModel

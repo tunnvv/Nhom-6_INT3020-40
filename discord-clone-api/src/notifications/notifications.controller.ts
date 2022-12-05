@@ -45,7 +45,7 @@ export class NotificationsController {
     @Body() createNotificationDto: CreateNotificationDto,
   ) {
     const { _id } = req.user;
-    createNotificationDto.sender = _id;
+    createNotificationDto.sender = _id.toString();
     const notification = await this.notificationsService.create(
       createNotificationDto,
     );

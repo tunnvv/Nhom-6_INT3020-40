@@ -15,6 +15,7 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
+  // CREATE A NEW USER
   async create(authUserDto: AuthUserDto): Promise<User> {
     try {
       const user = await new this.userModel(authUserDto);
@@ -45,6 +46,7 @@ export class UsersService {
     }
   }
 
+  // FIND A USER BY _ID
   async findByObjID(id: string): Promise<ShortUserInfo> {
     try {
       const user = await this.userModel.findOne({ _id: id }).lean().exec();
@@ -65,6 +67,7 @@ export class UsersService {
     }
   }
 
+  // FIND A USER BY _UID
   async findByNameID(uid: string): Promise<ShortUserInfo> {
     try {
       const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
@@ -78,13 +81,14 @@ export class UsersService {
         wallpaper: user.wallpaper,
       };
     } catch (err) {
-      if (err.code == 404) {
+      if (err.code === 404) {
         throw new ForbiddenException('User not found');
       }
       throw new HttpException('Something went wrong', err);
     }
   }
 
+  // FIND A USER BY EMAIL
   async findByEmail(email: string): Promise<User> {
     try {
       const user = await this.userModel.findOne({ email: email }).lean().exec();
@@ -95,19 +99,6 @@ export class UsersService {
       }
       throw new HttpException('Something went wrong', err);
     }
-  }
-
-  async findAll(name?: string): Promise<User[]> {
-    const users = await this.userModel
-      .find()
-      .lean()
-      .populate('friends', ['_uid', 'name', 'avatar'])
-      .exec();
-
-    if (name) {
-      return users.filter((user) => user.name === name);
-    }
-    return users;
   }
 
   // *** Retrieve 1-layer information *** \\
@@ -167,6 +158,7 @@ export class UsersService {
     }
   }
 
+  // UPDATE USER INFORMATION
   async update(_id: string, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.userModel.findOne({ _id }).lean().exec();

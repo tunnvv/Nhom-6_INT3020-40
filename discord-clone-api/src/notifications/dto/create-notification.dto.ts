@@ -12,10 +12,10 @@ export class CreateNotificationDto {
   @Type(() => User)
   sender: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
   @Type(() => User)
-  receiver: string;
+  receiver?: string;
 
   @ApiProperty({ required: true })
   @Prop({ required: true })
@@ -30,20 +30,20 @@ export class CreateNotificationDto {
   isAccept: boolean;
 
   @ApiProperty({ required: false })
-  friendUID: string;
+  friendUID?: string;
 
   @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'Server' })
   @Type(() => Server)
-  serverId: string;
+  serverId?: string;
 
   @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'ChatChannel' })
   @Type(() => ChatChannel)
-  chatId: string;
+  chatId?: string;
 
   @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'CallChannel' })
   @Type(() => CallChannel)
-  callId: string;
+  callId?: string;
 }
