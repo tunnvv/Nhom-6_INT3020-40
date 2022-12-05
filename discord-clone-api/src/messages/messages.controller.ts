@@ -33,6 +33,7 @@ import ResponseData from 'src/utils/response-data';
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
+  // CREATE A NEW MESSAGE
   @ApiOperation({
     summary: 'Create a new message',
     description: 'Create a new message',
@@ -56,6 +57,7 @@ export class MessagesController {
     );
   }
 
+  // OWNER UPDATE MESSAGE'S CONTENT
   @ApiOperation({
     summary: 'Owner updates the message content by ID',
     description: 'Owner updates the message content by ID',
@@ -82,6 +84,7 @@ export class MessagesController {
     );
   }
 
+  // OWNER DELETE MESSAGE'ID
   @ApiOperation({
     summary: 'Owner deletes a message by ID',
     description: 'Owner deletes a message by ID',

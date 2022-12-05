@@ -14,24 +14,30 @@ export class NotificationsService {
     private userServices: UsersService,
   ) {}
 
+  // CREATE A NEW NOTIFICATION
   async create(createNotificationDto: CreateNotificationDto) {
     try {
-      if (createNotificationDto.type == 'FRIEND') {
-        const receiver = await this.userServices.findByNameID(
+      let receiver;
+
+      if (createNotificationDto.friendUID) {
+        receiver = await this.userServices.findByNameID(
           createNotificationDto.friendUID,
         );
-        if (!receiver) {
-          console.log('abc');
-          return null;
-        }
-
-        createNotificationDto.receiver = receiver._id;
+      } else if (createNotificationDto.receiver) {
+        receiver = await this.userServices.findByObjID(
+          createNotificationDto.receiver,
+        );
       }
 
-      const notification = await this.notificationModel.create(
+      if (!receiver) {
+        return null;
+      }
+
+      createNotificationDto.receiver = receiver._id;
+
+      const notification = await new this.notificationModel(
         createNotificationDto,
       );
-
       await notification.save();
       return notification;
     } catch (err) {
@@ -39,6 +45,7 @@ export class NotificationsService {
     }
   }
 
+  // FIND ALL NOTI OF ONE USER
   async findAllForReceiver(userId: string) {
     const notifications = await this.notificationModel
       .find({
@@ -54,9 +61,11 @@ export class NotificationsService {
     return notifications;
   }
 
-  async findOne(_notiId: string, requestId: string) {
+  // FIND ONE NOTIFICATION
+  async findOne(_notiId: string, requestorId: string) {
+    // console.log(_notiId, requestId);
     const notification = await this.notificationModel
-      .findOne({ _id: _notiId, receiver: requestId })
+      .findOne({ _id: _notiId, receiver: requestorId })
       .lean()
       .populate('sender', ['_uid', 'name', 'avatar'])
       .exec();
@@ -86,6 +95,7 @@ export class NotificationsService {
     );
   }
 
+  // REMOVE A NOTIFICATION
   async remove(_notiId: string, requestId: string) {
     const notification = await this.notificationModel
       .deleteOne({ _id: _notiId, receiver: requestId })

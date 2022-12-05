@@ -15,6 +15,7 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
+  // CREATE A NEW USER
   async create(authUserDto: AuthUserDto): Promise<User> {
     try {
       const user = await new this.userModel(authUserDto);
@@ -45,6 +46,7 @@ export class UsersService {
     }
   }
 
+  // FIND A USER BY _ID
   async findByObjID(id: string): Promise<ShortUserInfo> {
     try {
       const user = await this.userModel.findOne({ _id: id }).lean().exec();
@@ -65,6 +67,7 @@ export class UsersService {
     }
   }
 
+  // FIND A USER BY _UID
   async findByNameID(uid: string): Promise<ShortUserInfo> {
     try {
       const user = await this.userModel.findOne({ _uid: uid }).lean().exec();
@@ -80,13 +83,14 @@ export class UsersService {
         wallpaper: user.wallpaper,
       };
     } catch (err) {
-      if (err.code == 404) {
+      if (err.code === 404) {
         throw new ForbiddenException('User not found');
       }
       throw new HttpException('Something went wrong', err);
     }
   }
 
+  // FIND A USER BY EMAIL
   async findByEmail(email: string): Promise<User> {
     try {
       const user = await this.userModel.findOne({ email: email }).lean().exec();
@@ -97,19 +101,6 @@ export class UsersService {
       }
       throw new HttpException('Something went wrong', err);
     }
-  }
-
-  async findAll(name?: string): Promise<User[]> {
-    const users = await this.userModel
-      .find()
-      .lean()
-      .populate('friends', ['_uid', 'name', 'avatar'])
-      .exec();
-
-    if (name) {
-      return users.filter((user) => user.name === name);
-    }
-    return users;
   }
 
   // *** Retrieve 1-layer information *** \\
@@ -169,6 +160,7 @@ export class UsersService {
     }
   }
 
+  // UPDATE USER INFORMATION
   async update(_id: string, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.userModel.findOne({ _id }).lean().exec();
@@ -190,8 +182,13 @@ export class UsersService {
     }
   }
 
-  async updateServerListById(_id: string, serverId: string) {
+  // ADD A NEW FRIEND TO FRIEND LIST
+  // - need to check the servers are not duplicated
+  //      + no check needed when creating server,
+  //      + check when adding server to server list
+  async updateServerList(_id: string, serverId: string) {
     const user = await this.userModel.findOne({ _id }).lean().exec();
+    console.log(user.servers);
     let newServers = [serverId].concat(user.servers);
     const tmp = [];
     newServers = newServers.reduce((serverListNotDuplicate, element) => {
@@ -205,7 +202,10 @@ export class UsersService {
     return this.userModel.updateOne({ _id }, { servers: newServers });
   }
 
-  async updateFriendListById(_id: string, friendId: string) {
+  // ADD A NEW FRIEND TO FRIEND LIST
+  // - need to check the friends are not duplicated
+  //      + check when adding friend to friend list
+  async updateFriendList(_id: string, friendId: string) {
     const user = await this.userModel.findOne({ _id }).lean().exec();
     let newFriends = [friendId].concat(user.friends);
     const tmp = [];

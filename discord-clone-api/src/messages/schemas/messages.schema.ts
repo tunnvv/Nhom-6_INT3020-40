@@ -24,6 +24,6 @@ export class Message {
   @ApiProperty({ required: false })
   @Prop({ type: mongoose.Types.ObjectId, ref: 'Message' })
   @Type(() => Message)
-  replyMessageId: string;
+  replyMessageId?: string;
 }
 export const MessageSchema = SchemaFactory.createForClass(Message);
